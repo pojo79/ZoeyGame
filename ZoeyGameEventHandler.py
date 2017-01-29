@@ -11,7 +11,6 @@ class GamePlayEventHandler(object):
 
     def handleEvent(self, pygame_event):    
         for event in pygame_event.get():
-            print(event)
             if event.type == pygame.QUIT:
                 self.endGame = True
 

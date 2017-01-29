@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256">
+  <image source="../../../../../Documents/game assets/goodly-2x.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztl0sOgzAMRFn0Av2vgd7/jE0WlZBFFE+aNEDfk2YHeJyxBQwDAAAAANTi1NvAn3MPeiz07GtnF9gzs7r2s7Y7bo2fPwbNwvW1/XxmRdkr1cM56OKQZy5fYm0VNY/WfjyoHmKPk0Oec7C14zzlZkmZn63nsbY/v8zDnmVJ/8o93l2uqW/fV6n+cr3EumoetlbrPLyzU1PKPq6R6i/Xy1zgqzSP5TeU8m4kj/b7oUAe5EEeacjj+HkcmS38fwEAAABAX95vbjDi
+  </data>
+ </layer>
+</map>
