@@ -15,13 +15,13 @@ class Level(object):
         print(tm)
 
     def render(self, surface):
-        getTile = self.tmxdata.get_tile_data_image_by_gid
-        for layer in tmxdata.visible_layers:
+        getTile = self.tmxdata.get_tile_image
+        for layer in self.tmxdata.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):
-                for x, y, gid in layer:
-                    tile = getTile(gid)
-                    if tile:
-                        surface.blit(tile, (x * self.tmxdata.tilewidth, y * self.tmxdata.tileheight))
+                for x, y, image in layer.tiles():
+                    #tile = getTile(x, y, layer)
+                    #if tile:
+                    surface.blit(image, (x * self.tmxdata.tilewidth, y * self.tmxdata.tileheight))
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
         self.render(temp_surface)
@@ -45,7 +45,7 @@ def endGame(bool_endGame):
 
 
 while not gameOver:
-    #game_display.fill((255,255,255))
+    game_display.fill((0, 100, 200))
     game_display.blit(tileSurface, (0, 0))
     pygame.display.update()
     currentHandler.handleEvent(pygame.event)
