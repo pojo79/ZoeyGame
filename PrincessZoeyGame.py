@@ -24,6 +24,7 @@ class Level(object):
                     surface.blit(image, (x * self.tmxdata.tilewidth, y * self.tmxdata.tileheight))
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
+        temp_surface.fill((0,100,250))
         self.render(temp_surface)
         return temp_surface
 
