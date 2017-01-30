@@ -1,4 +1,5 @@
 import ZoeyGameEventHandler
+import ZoeyGameSprites
 import pygame
 import pytmx
 import os
@@ -16,19 +17,17 @@ class Level(object):
         self.width = tm.width * tm.tilewidth
         self.height = tm.height * tm.tileheight
         self.tmxdata = tm
-        print(tm)
 
     def render(self, surface):
         getTile = self.tmxdata.get_tile_image
         for layer in self.tmxdata.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
-                    #tile = getTile(x, y, layer)
-                    #if tile:
                     surface.blit(image, (x * self.tmxdata.tilewidth, y * self.tmxdata.tileheight))
+    
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
-        temp_surface.fill((0,100,250))
+        temp_surface.fill((0,100,250)) #blue background
         self.render(temp_surface)
         return temp_surface
 
@@ -40,6 +39,8 @@ class ZoeyGame(object):
         self.x = 0
         self.currentHandler = ZoeyGameEventHandler.GamePlayEventHandler()
         self.game_display = game_display
+        self.group = pygame.sprite.Group()
+        self.group.add(ZoeyGameSprites.PrincessSprite())
         self.loadLevel()
         self.gameLoop()
 
@@ -55,6 +56,7 @@ class ZoeyGame(object):
         while not self.gameOver:
             xpos += self.x
             self.game_display.blit(self.tileSurface, (0 + xpos, 0))
+            self.group.draw(self.game_display)
             pygame.display.update()
             self.handleEvent(pygame.event)
             if(self.currentHandler.isEndGame()):
