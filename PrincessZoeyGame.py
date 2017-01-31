@@ -97,7 +97,7 @@ class ZoeyGame(object):
             pygame.display.update()
             if(self.currentHandler.isEndGame()):
                 self.gameOver = True
-            self.fps_clock.tick(60)
+            self.fps_clock.tick(10)
         
     def handleEvent(self, pygame_event):    
         for event in pygame_event.get():

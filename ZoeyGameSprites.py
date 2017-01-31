@@ -10,7 +10,7 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.inflate_ip(-20, 0)
         self.vel = vec(0, 0)
-        self.pos = vec(30, 450)
+        self.pos = vec(30, 150)
         self.acc = vec(0,0)
         self.onGround = False
         self.rect.move_ip(self.pos)
@@ -41,18 +41,19 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.vel += self.acc
         self.pos += self.vel + .5 * self.acc
 
+        print(str(self.vel + .5 * self.acc))
+
         self.rect.x = self.pos.x
         self.rect.y = self.pos.y
 
         if self.pos.y > 800:
-            self.pos = vec(30,350)
+            self.pos = vec(30,150)
         
         #self.update_xaxis()
         #self.update_yaxis()
 
     def set_position(self, object):
-        print('Vel: '+str(self.vel.y) + ' object top ' + str(object.rect.top) + ' self bottom: '+str(self.rect.bottom))
-        if self.vel.y > 0 and self.rect.bottom <= object.rect.top:
+        if self.vel.y > 0 and object.rect.top >= self.rect.bottom-30:
             self.onGround = True
             self.pos.y = object.rect.top-self.rect.height
             self.vel.y =0
