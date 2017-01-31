@@ -1,24 +1,21 @@
 import pygame
 vec = pygame.math.Vector2
+from math import *
 
 class PrincessSprite(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, start_coord):
         pygame.sprite.Sprite.__init__(self)
         self.MOVE_SPEED = 2
         self.image = pygame.image.load("./assets/art/zoeyPlaceHolder.png")
         self.rect = self.image.get_rect()
         self.rect.inflate_ip(-20, 0)
         self.vel = vec(0, 0)
-        self.pos = vec(30, 150)
+        self.pos = vec(start_coord[0], start_coord[1])
         self.acc = vec(0,0)
         self.onGround = False
         self.rect.move_ip(self.pos)
         
-
-    def get_position(self):
-        return (self.rect.x, self.rect.y)
-
     def draw(self, display):
         display.blit(self.image, self.rect)
 
@@ -27,6 +24,7 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.acc.y = -15
 
     def update(self, friction, gravity):
+        #add gravity variable
         self.acc = vec(0,0.8)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -41,17 +39,12 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.vel += self.acc
         self.pos += self.vel + .5 * self.acc
 
-        print(str(self.vel + .5 * self.acc))
-
         self.rect.x = self.pos.x
         self.rect.y = self.pos.y
 
         if self.pos.y > 800:
             self.pos = vec(30,150)
         
-        #self.update_xaxis()
-        #self.update_yaxis()
-
     def set_position(self, object):
         if self.vel.y > 0 and object.rect.top >= self.rect.bottom-35:
             self.onGround = True
@@ -62,4 +55,9 @@ class obstacle(pygame.sprite.Sprite):
 
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self)
+        self.original_x = x
+        self.original_y = y
         self.rect = pygame.Rect(x,y,width,height)
+        #used for debug
+        self.image = pygame.Surface((floor(width), floor(height)))
+        self.image.fill((255,0,255))
