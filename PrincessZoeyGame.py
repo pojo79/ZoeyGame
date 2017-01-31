@@ -46,9 +46,10 @@ class ZoeyGame(object):
         self.leftBounds = 0
         self.currentHandler = ZoeyGameEventHandler.GamePlayEventHandler()
         self.game_display = game_display
-        self.group = pygame.sprite.Group()
+        self.allGameObjects = pygame.sprite.Group()
         self.player = PrincessSprite()
         self.ground = pygame.sprite.Group()
+        self.allGameObjects.add(self.ground)
         self.loadLevel()
         self.gameLoop()
 
@@ -59,6 +60,7 @@ class ZoeyGame(object):
         for tile_object in self.level.tmxdata.objects:
             if tile_object.name == "ground":
                 self.ground.add(obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
+            self.allGameObjects.add(self.ground)
         self.rightBounds = 450
         self.leftBounds = self.rightBounds - 100
 
@@ -66,24 +68,32 @@ class ZoeyGame(object):
         self.gameOver = endGame   
 
     def shiftAll(self):
-        x_diff = 0
-        if self.player.get_position()[0] > self.rightBounds:
+        if self.player.pos.x > self.rightBounds:
             if self.world_x <= 0 - self.tileSurface.get_width() + game_display.get_width():
                 self.world_x = 0- self.tileSurface.get_width() + game_display.get_width()
+                if(self.player.rect.right > game_display.get_width() ):
+                    self.player.pos.x = game_display.get_width() - self.player.rect.width
             else:
-                self.world_x += self.rightBounds - self.player.rect.x
-                self.player.rect.x = self.rightBounds
-        if self.player.get_position()[0] <= self.leftBounds:
+                self.world_x += self.rightBounds - self.player.pos.x
+                self.player.pos.x = self.rightBounds
+                for item in self.allGameObjects:
+                    item.rect.x = item.original_x + self.world_x
+                    
+        if self.player.pos.x <= self.leftBounds:
             if self.world_x >= 0:
                 self.world_x = 0
+                if self.player.pos.x < 0:
+                    self.player.pos.x = 0
             else:
-                self.world_x += self.leftBounds - self.player.rect.x
-                self.player.rect.x = self.leftBounds
+                self.world_x += self.leftBounds - self.player.pos.x
+                self.player.pos.x = self.leftBounds
+                for item in self.allGameObjects:
+                    item.rect.x = item.original_x + self.world_x
 
     def gameLoop(self):
         while not self.gameOver:
 
-            #self. shiftAll()
+            self. shiftAll()
             
             self.handleEvent(pygame.event)
             self.game_display.blit(self.tileSurface, (self.world_x, 0))
@@ -92,6 +102,9 @@ class ZoeyGame(object):
             collide = pygame.sprite.spritecollide(self.player, self.ground, False)
             if collide:
                 self.player.set_position(collide[0])
+
+            #draw platform hitbox
+            #self.ground.draw(self.game_display)
 
             self.player.draw(self.game_display)
             pygame.display.update()

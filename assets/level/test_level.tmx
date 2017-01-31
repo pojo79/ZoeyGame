@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="20">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="38">
  <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256">
   <image source="../art/goodly-2x.png" width="512" height="512"/>
  </tileset>
@@ -20,11 +20,29 @@
   <object id="11" name="ground" x="511" y="480" width="31" height="5"/>
   <object id="12" name="ground" x="0" y="385" width="285" height="2"/>
   <object id="13" name="ground" x="959" y="384" width="285" height="12"/>
-  <object id="14" name="ground" x="1152" y="289" width="285" height="12"/>
+  <object id="14" name="ground" x="1152" y="289" width="350" height="12"/>
   <object id="15" name="ground" x="769" y="288" width="31" height="4"/>
   <object id="16" name="ground" x="864" y="480" width="31" height="12"/>
   <object id="17" name="ground" x="642" y="610" width="31" height="4"/>
   <object id="18" name="ground" x="482" y="131" width="94" height="3"/>
   <object id="19" name="ground" x="351" y="34" width="32" height="3"/>
+  <object id="20" name="ground" x="1342" y="514" width="128" height="12"/>
+  <object id="21" name="ground" x="1633" y="354" width="31" height="12"/>
+  <object id="22" name="ground" x="1631" y="578" width="31" height="12"/>
+  <object id="23" name="ground" x="1761" y="451" width="31" height="12"/>
+  <object id="24" name="ground" x="1760" y="259" width="31" height="12"/>
+  <object id="25" name="ground" x="1889" y="322" width="61" height="12"/>
+  <object id="26" name="ground" x="1954" y="514" width="28" height="12"/>
+  <object id="27" name="ground" x="2177" y="322" width="28" height="12"/>
+  <object id="28" name="ground" x="2080" y="416" width="126" height="12"/>
+  <object id="29" name="ground" x="1887" y="578" width="192" height="12"/>
+  <object id="30" name="ground" x="2305" y="226" width="285" height="12"/>
+  <object id="31" name="ground" x="2529" y="353" width="673" height="12"/>
+  <object id="32" name="ground" x="2624" y="480" width="64" height="12"/>
+  <object id="33" name="ground" x="2784" y="576" width="96" height="12"/>
+  <object id="34" name="ground" x="3040" y="192" width="160" height="12"/>
+  <object id="35" name="ground" x="2912" y="256" width="32" height="12"/>
+  <object id="36" name="goal" x="3168" y="160" width="32" height="32"/>
+  <object id="37" name="player_spawn" x="64" y="352" width="32" height="32"/>
  </objectgroup>
 </map>
