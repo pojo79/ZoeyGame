@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="20">
  <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256">
-  <image source="../../assets/art/goodly-2x.png" width="512" height="512"/>
+  <image source="../art/goodly-2x.png" width="512" height="512"/>
  </tileset>
  <layer name="Tile Layer 1" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztmFsPwiAMhTcvia/en3X+/9/olkiCFVYOdBuL50sao4JtOS3gmoYQQgghhJTSfl53i0axflp9yCjX3m6e3Ysjqpu9wW/INZN2NvCxRg4Zcy7mUXzz6K0DxlvH42oF6Ss0hmNvpwRLqcuXeJ+j6RioHjKeqQnli8Yw5PhMsNA6yP1c+h7qSaslpH6kHtp54uJB6qJkzw31j6aHzKFED7mWOfWIzEntZUsrPa9i+Wm5DH5RPaQvZG1dXSBzUmvH0pD9MUQsPy2XLiOuXD38OxRyNlIPTI857le16bFRvvfXyB9bU3/k4ufg9tml9dCw6g/5P6xED6u+qaE/tH6Q1Hh+uM+3SRnEqUEPlDn10O67oWcfJc+MtBz8++I/6rHk+cH+0H1Rj1+oB/XQfFtBPagH9YgzhR5vwZ5fwA==
+   eJztmN0OwiAMhbepibf+X7v5/s8oSyTBylZa6mB6vqQxKkjLaQuuacBa6Uo7AAAASi7Ors5upR0BwJD29bot6sX6afkhs/j+4u3X+8zO4DfonlE7GayxRvaKOWdzL965OxsE46390ZzfUh8Ozo4JlpKXD/Jeo+kcUj2oP98mFq/UhzHGPsFi+0D7OV17zCculyT5Q/XgzhPvjyQvcnpurH44PWgMOXrQvdTko2ROai1bWu55NRUfF8u4rlQPupZkb31eSOak5o6lSfpjjKn4uFgGhV9aPcI7lORshB4yPZa4X9WmR8d8H+5ROLam+tASxuD7bGk9OKzqg/4Py9HDqm5qqA+uHig1nh/+801SBNPUoIeUJfXg7ruxZx85z4y4GML74j/qUfL8QH3wa0GPT6AH9ODWtgJ6QA+pHql7Aj3i9gSe5WAo
   </data>
  </layer>
  <layer name="Tile Layer 2" width="100" height="25">
@@ -13,4 +13,18 @@
    eJzt1MEJwCAABEFDPhZgCfZfY96CT+GMzlSwcHClAAAAAPAHbzoA4FBPOiCkpgOAZW79MeZaOoBBTwcwsMde7LEXe3CSD5VsALI=
   </data>
  </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="1" name="ground" x="383" y="544" width="33" height="3"/>
+  <object id="6" name="ground" x="352" y="289" width="94" height="3"/>
+  <object id="10" name="ground" x="608" y="353" width="94" height="5"/>
+  <object id="11" name="ground" x="511" y="480" width="31" height="5"/>
+  <object id="12" name="ground" x="0" y="385" width="285" height="2"/>
+  <object id="13" name="ground" x="959" y="384" width="285" height="12"/>
+  <object id="14" name="ground" x="1152" y="289" width="285" height="12"/>
+  <object id="15" name="ground" x="769" y="288" width="31" height="4"/>
+  <object id="16" name="ground" x="864" y="480" width="31" height="12"/>
+  <object id="17" name="ground" x="642" y="610" width="31" height="4"/>
+  <object id="18" name="ground" x="482" y="131" width="94" height="3"/>
+  <object id="19" name="ground" x="351" y="34" width="32" height="3"/>
+ </objectgroup>
 </map>
