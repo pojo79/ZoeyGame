@@ -11,13 +11,17 @@ pygame.display.set_caption("Princess Zoey's Adventure")
 
 class Level(object):
             
-    def __init__(self, filename, friction):
+    def __init__(self, filename, friction, gravity):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         tm = pytmx.load_pygame(dir_path+filename, pixelalpha=True)
         self.width = tm.width * tm.tilewidth
         self.height = tm.height * tm.tileheight
         self.tmxdata = tm
         self.level_friction = friction
+        self.level_gravity = gravity
+        self.spawn = (0,0)
+        self.ground = pygame.sprite.Group()
+        self.goal = 0
 
     def render(self, surface):
         getTile = self.tmxdata.get_tile_image
@@ -44,28 +48,30 @@ class ZoeyGame(object):
         self.world_x = 0
         self.rightBounds = 0
         self.leftBounds = 0
-        self.currentHandler = ZoeyGameEventHandler.GamePlayEventHandler()
-        self.game_display = game_display
         self.allGameObjects = pygame.sprite.Group()
-        self.player = PrincessSprite()
-        self.ground = pygame.sprite.Group()
-        self.allGameObjects.add(self.ground)
         self.loadLevel()
+        self.game_display = game_display
+        self.player = PrincessSprite(self.level.spawn)
         self.gameLoop()
 
 
     def loadLevel(self):
-        self.level = Level("/assets/level/test_level.tmx", -.35)
+        self.level = Level("/assets/level/test_level.tmx", -.35, 0.8)
         self.tileSurface = self.level.make_map()
+        
         for tile_object in self.level.tmxdata.objects:
             if tile_object.name == "ground":
-                self.ground.add(obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
-            self.allGameObjects.add(self.ground)
+                self.level.ground.add(obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
+            if tile_object.name == "player_spawn":
+                self.level.spawn = (tile_object.x, tile_object.y)
+            if tile_object.name == "goal":
+                self.level.goal = obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+                self.allGameObjects.add(self.level.goal)
+
+            self.allGameObjects.add(self.level.ground)
+        
         self.rightBounds = 450
         self.leftBounds = self.rightBounds - 100
-
-    def endGame(self, bool_endGame):
-        self.gameOver = endGame   
 
     def shiftAll(self):
         if self.player.pos.x > self.rightBounds:
@@ -99,17 +105,20 @@ class ZoeyGame(object):
             self.game_display.blit(self.tileSurface, (self.world_x, 0))
             self.player.update(self.level.level_friction, 0)
 
-            collide = pygame.sprite.spritecollide(self.player, self.ground, False)
+            if pygame.sprite.collide_rect(self.level.goal, self.player):
+                print("yea, you win")
+                self.gameOver = True
+
+            collide = pygame.sprite.spritecollide(self.player, self.level.ground, False)
             if collide:
                 self.player.set_position(collide[0])
 
             #draw platform hitbox
             #self.ground.draw(self.game_display)
+            self.allGameObjects.draw(self.game_display)
 
             self.player.draw(self.game_display)
             pygame.display.update()
-            if(self.currentHandler.isEndGame()):
-                self.gameOver = True
             self.fps_clock.tick(60)
         
     def handleEvent(self, pygame_event):    

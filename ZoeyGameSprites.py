@@ -4,14 +4,14 @@ from math import *
 
 class PrincessSprite(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, start_coord):
         pygame.sprite.Sprite.__init__(self)
         self.MOVE_SPEED = 2
         self.image = pygame.image.load("./assets/art/zoeyPlaceHolder.png")
         self.rect = self.image.get_rect()
         self.rect.inflate_ip(-20, 0)
         self.vel = vec(0, 0)
-        self.pos = vec(30, 150)
+        self.pos = vec(start_coord[0], start_coord[1])
         self.acc = vec(0,0)
         self.onGround = False
         self.rect.move_ip(self.pos)
