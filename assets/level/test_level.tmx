@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="17">
  <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256">
-  <image source="../../assets/art/goodly-2x.png" width="512" height="512"/>
+  <image source="../art/goodly-2x.png" width="512" height="512"/>
  </tileset>
  <layer name="Tile Layer 1" width="100" height="25">
   <data encoding="base64" compression="zlib">
@@ -13,4 +13,15 @@
    eJzt1MEJwCAABEFDPhZgCfZfY96CT+GMzlSwcHClAAAAAPAHbzoA4FBPOiCkpgOAZW79MeZaOoBBTwcwsMde7LEXe3CSD5VsALI=
   </data>
  </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="1" name="ground" x="383" y="544" width="33" height="3"/>
+  <object id="6" name="ground" x="352" y="289" width="94" height="3"/>
+  <object id="10" name="ground" x="608" y="353" width="94" height="5"/>
+  <object id="11" name="ground" x="511" y="480" width="31" height="5"/>
+  <object id="12" name="ground" x="0" y="385" width="285" height="2"/>
+  <object id="13" name="ground" x="959" y="384" width="285" height="12"/>
+  <object id="14" name="ground" x="1152" y="289" width="285" height="12"/>
+  <object id="15" name="ground" x="769" y="288" width="31" height="4"/>
+  <object id="16" name="ground" x="864" y="480" width="31" height="12"/>
+ </objectgroup>
 </map>
