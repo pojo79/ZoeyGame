@@ -53,7 +53,7 @@ class PrincessSprite(pygame.sprite.Sprite):
         #self.update_yaxis()
 
     def set_position(self, object):
-        if self.vel.y > 0 and object.rect.top >= self.rect.bottom-30:
+        if self.vel.y > 0 and object.rect.top >= self.rect.bottom-35:
             self.onGround = True
             self.pos.y = object.rect.top-self.rect.height
             self.vel.y =0
