@@ -16,24 +16,29 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.acc = vec(0,0)
         self.onGround = False
         self.rect.move_ip(self.pos)
+        self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
+
         
     def draw(self, display):
         display.blit(self.image, self.rect)
 
     def jump(self):
+        self.jump_sound.play()
         self.onGround = False
         self.acc.y = -15
-        print('jump')
 
     def update(self, friction, gravity):
-        #add gravity variable
         print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
         self.acc = vec(0, gravity)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.acc.x = -self.MOVE_SPEED
+            if not self.onGround and self.vel.x > .05:
+                self.acc.x = -self.MOVE_SPEED/2
         if keys[pygame.K_RIGHT]:
             self.acc.x = self.MOVE_SPEED
+            if not self.onGround and self.vel.x < -.05:
+                self.acc.x = self.MOVE_SPEED/2
         if keys[pygame.K_SPACE]:
             if self.onGround  and not self.space_pushed:
                 self.space_pushed = True

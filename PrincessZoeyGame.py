@@ -51,10 +51,14 @@ class ZoeyGame(object):
         self.leftBounds = 0
         self.allGameObjects = pygame.sprite.Group()
         self.loadLevel()
+        self.load_music()
+        self.splat = pygame.mixer.Sound("./assets/sound/splat.wav")
         self.game_display = game_display
         self.player = PrincessSprite(self.level.spawn)
         self.gameLoop()
 
+    def load_music(self):
+        pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")
 
     def loadLevel(self):
         self.level = Level("/assets/level/test_level.tmx", -.35, 0.8)
@@ -105,6 +109,8 @@ class ZoeyGame(object):
             item.rect.x += xdiff
 
     def gameLoop(self):
+        pygame.mixer.music.play()
+        print(pygame.mixer.music.set_volume(.35))
         while not self.gameOver:
             self.handleEvent(pygame.event)
             self.game_display.blit(self.tileSurface, (self.world_x, 0))
@@ -116,6 +122,7 @@ class ZoeyGame(object):
             if hits:
                 for hit in hits:
                     if self.player.kill_enemy(hit, self.level.level_gravity):
+                        self.splat.play()
                         hit.kill()
                     else:
                         self.gameOver = True
@@ -130,7 +137,7 @@ class ZoeyGame(object):
             self.level.enemies.update(self.level.level_friction, self.level.level_gravity)
 
             #draw platform hitbox
-            self.level.ground.draw(self.game_display)
+            #self.level.ground.draw(self.game_display)
             #self.allGameObjects.draw(self.game_display)
             self. shiftAll()
 
@@ -139,6 +146,7 @@ class ZoeyGame(object):
             self.player.draw(self.game_display)
             pygame.display.update()
             self.fps_clock.tick(60)
+        pygame.mixer.music.stop()
         
     def handleEvent(self, pygame_event):    
         for event in pygame_event.get():
