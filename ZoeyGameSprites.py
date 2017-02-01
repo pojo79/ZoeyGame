@@ -70,9 +70,8 @@ class PrincessSprite(pygame.sprite.Sprite):
     def kill_enemy(self, enemy, gravity):
         y_vel = self.vel.y + .5 * self.acc.y
         if self.vel.y - gravity > 0 and enemy.rect.top >= self.rect.bottom - y_vel:
-            #self.pos.y = enemy.rect.top
-            #self.vel.y = 0
-            self.vel.y += -25
+            self.vel.y = -8
+            #self.vel.y += -25
             return True
         else:
             return False
