@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="38">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="52">
  <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256">
   <image source="../art/goodly-2x.png" width="512" height="512"/>
  </tileset>
@@ -13,18 +13,18 @@
    eJzt1MEJwCAABEFDPhZgCfZfY96CT+GMzlSwcHClAAAAAPAHbzoA4FBPOiCkpgOAZW79MeZaOoBBTwcwsMde7LEXe3CSD5VsALI=
   </data>
  </layer>
- <objectgroup name="Object Layer 1">
-  <object id="1" name="ground" x="383" y="544" width="33" height="3"/>
-  <object id="6" name="ground" x="352" y="289" width="94" height="3"/>
-  <object id="10" name="ground" x="608" y="353" width="94" height="5"/>
-  <object id="11" name="ground" x="511" y="480" width="31" height="5"/>
-  <object id="12" name="ground" x="0" y="385" width="285" height="2"/>
+ <objectgroup name="level layout">
+  <object id="1" name="ground" x="383" y="544" width="33" height="16"/>
+  <object id="6" name="ground" x="352" y="288" width="94" height="15"/>
+  <object id="10" name="ground" x="608" y="352" width="94" height="15"/>
+  <object id="11" name="ground" x="511" y="480" width="31" height="16"/>
+  <object id="12" name="ground" x="0" y="384" width="285" height="16"/>
   <object id="13" name="ground" x="959" y="384" width="285" height="12"/>
   <object id="14" name="ground" x="1152" y="289" width="350" height="12"/>
-  <object id="15" name="ground" x="769" y="288" width="31" height="4"/>
+  <object id="15" name="ground" x="768" y="288" width="31" height="16"/>
   <object id="16" name="ground" x="864" y="480" width="31" height="12"/>
   <object id="17" name="ground" x="642" y="610" width="31" height="4"/>
-  <object id="18" name="ground" x="482" y="131" width="94" height="3"/>
+  <object id="18" name="ground" x="480" y="128" width="94" height="16"/>
   <object id="19" name="ground" x="351" y="34" width="32" height="3"/>
   <object id="20" name="ground" x="1342" y="514" width="128" height="12"/>
   <object id="21" name="ground" x="1633" y="354" width="31" height="12"/>
@@ -43,6 +43,41 @@
   <object id="34" name="ground" x="3040" y="192" width="160" height="12"/>
   <object id="35" name="ground" x="2912" y="256" width="32" height="12"/>
   <object id="36" name="goal" x="3168" y="160" width="32" height="32"/>
-  <object id="37" name="player_spawn" x="64" y="352" width="32" height="32"/>
+  <object id="37" name="player_spawn" x="64" y="288"/>
+ </objectgroup>
+ <objectgroup name="Enemy Layer">
+  <object id="43" name="snake" x="2424" y="192" width="32" height="32">
+   <properties>
+    <property name="travel" value="70"/>
+   </properties>
+  </object>
+  <object id="44" name="snake" x="1952" y="544" width="32" height="32">
+   <properties>
+    <property name="travel" value="40"/>
+   </properties>
+  </object>
+  <object id="45" name="snake" x="1632" y="320" width="32" height="32">
+   <properties>
+    <property name="travel" value="0"/>
+   </properties>
+  </object>
+  <object id="46" name="snake" x="1384" y="480" width="32" height="32">
+   <properties>
+    <property name="travel" value="50"/>
+   </properties>
+  </object>
+  <object id="47" name="snake" x="864" y="448" width="32" height="32">
+   <properties>
+    <property name="travel" value="5"/>
+   </properties>
+  </object>
+  <object id="48" name="snake" x="512" y="96" width="32" height="32">
+   <properties>
+    <property name="travel" value="45"/>
+   </properties>
+  </object>
+  <object id="49" name="eye" x="1920" y="288" width="32" height="32"/>
+  <object id="50" name="eye" x="1376" y="256" width="32" height="32"/>
+  <object id="51" name="eye" x="384" y="512" width="32" height="32"/>
  </objectgroup>
 </map>
