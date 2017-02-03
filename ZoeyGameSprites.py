@@ -1,22 +1,25 @@
-import pygame
-vec = pygame.math.Vector2
 import math
+import pygame
+
+vec = pygame.math.Vector2
+
 
 class PrincessSprite(pygame.sprite.Sprite):
 
     def __init__(self, start_coord):
         pygame.sprite.Sprite.__init__(self)
-        self.MOVE_SPEED = 2
+        self.MOVE_SPEED = 1.75
         self.space_pushed = False
         self.is_dead = False
-        self.image_right = pygame.image.load("./assets/art/zoeyPlaceHolder.png")
+        self.image_right = pygame.image.load(
+            "./assets/art/zoeyPlaceHolder.png")
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
         self.rect = self.image.get_rect()
         self.rect.inflate_ip(-20, 0)
         self.vel = vec(0, 0)
         self.pos = vec(start_coord[0], start_coord[1])
-        self.acc = vec(0,0)
+        self.acc = vec(0, 0)
         self.onGround = False
         self.rect.move_ip(self.pos)
         self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
@@ -36,15 +39,15 @@ class PrincessSprite(pygame.sprite.Sprite):
         if keys[pygame.K_LEFT]:
             self.acc.x = -self.MOVE_SPEED
             if not self.onGround and self.vel.x > .05:
-                self.acc.x = -self.MOVE_SPEED/2
+                self.acc.x = -self.MOVE_SPEED / 2
             self.image = self.image_left
         if keys[pygame.K_RIGHT]:
             self.acc.x = self.MOVE_SPEED
             if not self.onGround and self.vel.x < -.05:
-                self.acc.x = self.MOVE_SPEED/2
+                self.acc.x = self.MOVE_SPEED / 2
             self.image = self.image_right
         if keys[pygame.K_SPACE]:
-            if self.vel.y == 0  and not self.space_pushed:
+            if self.vel.y == 0 and not self.space_pushed:
                 self.space_pushed = True
                 self.jump()
         else:
@@ -61,15 +64,15 @@ class PrincessSprite(pygame.sprite.Sprite):
 
         if self.pos.y > floor:
             self.is_dead = True
-        
+
     def set_position(self, object):
         y_vel = math.ceil(self.vel.y + .5 * self.acc.y)
         #print("object top = " + str(object.rect.top)+' self bottom = ' +str(self.rect.bottom) + " y_vel = "+str(y_vel))
         if self.vel.y > 0 and object.rect.top >= self.rect.bottom - y_vel:
-            self.vel.y =0
+            self.vel.y = 0
             if self.rect.bottom - 1 == object.rect.top:
                 self.onGround = True
-            self.pos.y = object.rect.top-self.rect.height
+            self.pos.y = object.rect.top - self.rect.height
 
     def kill_enemy(self, enemy, gravity):
         y_vel = math.ceil(self.vel.y + .5 * self.acc.y)
@@ -82,17 +85,20 @@ class PrincessSprite(pygame.sprite.Sprite):
             self.is_dead = True
             return False
 
+
 class obstacle(pygame.sprite.Sprite):
 
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self)
-        self.rect = pygame.Rect(x,y,width,height)
-        #used for debug
+        self.rect = pygame.Rect(x, y, width, height)
+        # used for debug
         self.image = pygame.Surface((math.floor(width), math.floor(height)))
-        self.image.fill((255,0,255))
+        self.image.fill((255, 0, 255))
+
 
 class snake(pygame.sprite.Sprite):
-    def __init__(self, x, y, travel = 40):
+
+    def __init__(self, x, y, travel=40):
         pygame.sprite.Sprite.__init__(self)
         self.UPDATE_FRAME_ON = 150
         self.current_frame = 0
@@ -111,20 +117,24 @@ class snake(pygame.sprite.Sprite):
         self.x_max_travel = travel
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
-        self.acc = vec(-self.TRAVEL_SPEED,0)
+        self.acc = vec(-self.TRAVEL_SPEED, 0)
 
     def load_images(self):
-        self.walking_frames_left = [self.spritesheet.get_image_row_column(self.sprite_width,self.sprite_height,2,0),
-                               self.spritesheet.get_image_row_column(self.sprite_width,self.sprite_height,1,0),
-                               self.spritesheet.get_image_row_column(self.sprite_width,self.sprite_height,0,0),
-                               self.spritesheet.get_image_row_column(self.sprite_width,self.sprite_height,2,0),
-                               self.spritesheet.get_image_row_column(self.sprite_width,self.sprite_height,3,0),
-                               self.spritesheet.get_image_row_column(self.sprite_width,self.sprite_height,4,0)]
+        self.walking_frames_left = [self.spritesheet.get_image_row_column(self.sprite_width, self.sprite_height, 2, 0),
+                                    self.spritesheet.get_image_row_column(
+                                        self.sprite_width, self.sprite_height, 1, 0),
+                                    self.spritesheet.get_image_row_column(
+                                        self.sprite_width, self.sprite_height, 0, 0),
+                                    self.spritesheet.get_image_row_column(
+                                        self.sprite_width, self.sprite_height, 2, 0),
+                                    self.spritesheet.get_image_row_column(
+                                        self.sprite_width, self.sprite_height, 3, 0),
+                                    self.spritesheet.get_image_row_column(self.sprite_width, self.sprite_height, 4, 0)]
 
         self.walking_frames_right = []
         for frame in self.walking_frames_left:
-            self.walking_frames_right.append(pygame.transform.flip(frame,True, False))
-
+            self.walking_frames_right.append(
+                pygame.transform.flip(frame, True, False))
 
     def update(self, friction, gravity):
         force = False
@@ -139,7 +149,7 @@ class snake(pygame.sprite.Sprite):
                 self.image_set = self.walking_frames_left
                 force = True
             else:
-                self.acc.x = self.TRAVEL_SPEED 
+                self.acc.x = self.TRAVEL_SPEED
                 self.current_frame = 0
                 self.image_set = self.walking_frames_right
                 force = True
@@ -151,10 +161,12 @@ class snake(pygame.sprite.Sprite):
             self.last_frame = now
             self.current_frame += 1
             if self.current_frame >= len(self.walking_frames_left):
-               self.current_frame = 0
+                self.current_frame = 0
             self.image = self.image_set[self.current_frame]
 
+
 class eye(pygame.sprite.Sprite):
+
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("./assets/art/peeper_tall.png")
@@ -162,20 +174,22 @@ class eye(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-class Spritesheet:
-        def __init__(self, filename):
-            self.COLOR_KEY = (255,20,147) #PINK
-            self.spritesheet = pygame.image.load(filename).convert()
 
-        def get_image(self, x, y, width, height):
-            
-            image = pygame.Surface((width, height))
-            image.set_colorkey(self.COLOR_KEY)
-            image.blit(self.spritesheet, (0, 0), (x,y,width,height))
-            return image
-        
-        def get_image_row_column(self,width,height,column, row):
-            x = width * column
-            y = height * row
-            #print('loading image at x:'+ str(x) +" y: " +str(y))
-            return self.get_image(x, y, width, height)
+class Spritesheet:
+
+    def __init__(self, filename):
+        self.COLOR_KEY = (255, 20, 147)  # PINK
+        self.spritesheet = pygame.image.load(filename).convert()
+
+    def get_image(self, x, y, width, height):
+
+        image = pygame.Surface((width, height))
+        image.set_colorkey(self.COLOR_KEY)
+        image.blit(self.spritesheet, (0, 0), (x, y, width, height))
+        return image
+
+    def get_image_row_column(self, width, height, column, row):
+        x = width * column
+        y = height * row
+        #print('loading image at x:'+ str(x) +" y: " +str(y))
+        return self.get_image(x, y, width, height)
