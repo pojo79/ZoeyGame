@@ -8,6 +8,7 @@ class PrincessSprite(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.MOVE_SPEED = 2
         self.space_pushed = False
+        self.is_dead = False
         self.image_right = pygame.image.load("./assets/art/zoeyPlaceHolder.png")
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
@@ -20,7 +21,6 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.rect.move_ip(self.pos)
         self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
 
-        
     def draw(self, display):
         display.blit(self.image, self.rect)
 
@@ -29,7 +29,7 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.onGround = False
         self.acc.y = -15
 
-    def update(self, friction, gravity):
+    def update(self, friction, gravity, floor):
         #print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
         self.acc = vec(0, gravity)
         keys = pygame.key.get_pressed()
@@ -44,7 +44,7 @@ class PrincessSprite(pygame.sprite.Sprite):
                 self.acc.x = self.MOVE_SPEED/2
             self.image = self.image_right
         if keys[pygame.K_SPACE]:
-            if self.onGround  and not self.space_pushed:
+            if self.vel.y == 0  and not self.space_pushed:
                 self.space_pushed = True
                 self.jump()
         else:
@@ -59,8 +59,8 @@ class PrincessSprite(pygame.sprite.Sprite):
         self.rect.x = self.pos.x
         self.rect.y = self.pos.y
 
-        if self.pos.y > 800:
-            self.pos = vec(30,150)
+        if self.pos.y > floor:
+            self.is_dead = True
         
     def set_position(self, object):
         y_vel = math.ceil(self.vel.y + .5 * self.acc.y)
@@ -79,6 +79,7 @@ class PrincessSprite(pygame.sprite.Sprite):
             self.vel.y = -8
             return True
         else:
+            self.is_dead = True
             return False
 
 class obstacle(pygame.sprite.Sprite):
@@ -146,7 +147,6 @@ class snake(pygame.sprite.Sprite):
 
     def animate(self, force):
         now = pygame.time.get_ticks()
-        print('now : '+str(now) + ' last_frame: '+str(self.last_frame))
         if (now - self.last_frame >= self.UPDATE_FRAME_ON) or (force):
             self.last_frame = now
             self.current_frame += 1

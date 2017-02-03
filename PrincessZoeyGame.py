@@ -3,6 +3,7 @@ from ZoeyGameSprites import *
 import pygame
 import pytmx
 import os
+import numpy
 
 #initiate pygame
 pygame.init()
@@ -49,6 +50,9 @@ class ZoeyGame(object):
         self.world_x = 0
         self.rightBounds = 0
         self.leftBounds = 0
+        self.player_lives = 3
+        self.death_time = None
+        self.death_scene = pygame.image.load("./assets/art/death_scene.png")
         self.allGameObjects = pygame.sprite.Group()
         self.loadLevel()
         self.load_music()
@@ -61,7 +65,7 @@ class ZoeyGame(object):
         pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")
 
     def loadLevel(self):
-        self.level = Level("/assets/level/test_level.tmx", -.35, 0.8)
+        self.level = Level("/assets/level/test_level.tmx", -.25, 0.8)
         self.tileSurface = self.level.make_map()
         
         for tile_object in self.level.tmxdata.objects:
@@ -124,16 +128,13 @@ class ZoeyGame(object):
                     if self.player.kill_enemy(hit, self.level.level_gravity):
                         self.splat.play()
                         hit.kill()
-                    else:
-                        self.gameOver = True
-                        print("You lose")
 
             collide = pygame.sprite.spritecollide(self.player, self.level.ground, False)
             if collide:
                 self.player.set_position(collide[0])
             
 
-            self.player.update(self.level.level_friction, self.level.level_gravity)
+            self.player.update(self.level.level_friction, self.level.level_gravity, self.tileSurface.get_height())
             self.level.enemies.update(self.level.level_friction, self.level.level_gravity)
 
             #draw platform hitbox
@@ -145,8 +146,38 @@ class ZoeyGame(object):
             self.level.enemies.draw(self.game_display)
             self.player.draw(self.game_display)
             pygame.display.update()
+
+            if self.player.is_dead:
+                self.death_time = pygame.time.get_ticks()
+                self.do_death_sequence()
+                self.respawn_player()
+
             self.fps_clock.tick(60)
         pygame.mixer.music.stop()
+
+    def do_death_sequence(self):
+        time = pygame.time.get_ticks()
+
+        death_scene = self.game_display
+        pygame.time.delay(200)
+
+        death_scene.blit(self.death_scene, self.death_scene.get_rect())
+        game_display.blit(death_scene, death_scene.get_rect())
+        pygame.display.update()
+        pygame.time.delay(1500)
+
+    def respawn_player(self):
+         print('Player Lives = '+str(self.player_lives))
+         if self.player_lives == 0:
+            print('In if block')
+            self.gameOver = True
+         else:
+            self.world_x = 0
+            self.loadLevel()
+            self.player = PrincessSprite(self.level.spawn)
+            self.player_lives -= 1
+         print('Respawn Lives left = '+str(self.player_lives))
+       
         
     def handleEvent(self, pygame_event):    
         for event in pygame_event.get():
