@@ -46,15 +46,15 @@ class PlayerSprite(pygame.sprite.Sprite):
         if self.direction == Move.LEFT:
             self.acc.x = -Move.PLAYER_MOVE
             if not self.onGround and self.vel.x > .05:
-                self.acc.x = -self.MOVE_SPEED / 2
+                self.acc.x = -Move.PLAYER_MOVE / 2
             self.image = self.image_left
         if self.direction == Move.RIGHT:
             self.acc.x = Move.PLAYER_MOVE
             if not self.onGround and self.vel.x < -.05:
-                self.acc.x = self.MOVE_SPEED / 2
+                self.acc.x = Move.PLAYER_MOVE / 2
             self.image = self.image_right
         self.acc.x += self.vel.x * friction
-        if math.fabs(self.acc.x) <= .05:
+        if math.fabs(self.acc.x) <= Move.ZERO_THRESHOLD:
             self.acc.x = 0
             self.vel.x = 0
         self.vel += self.acc
@@ -79,7 +79,7 @@ class PlayerSprite(pygame.sprite.Sprite):
       #  print('enemy top: '+str(enemy.rect.top) + ' self bottom: '+str(self.rect.bottom) + ' yvel = '+str(y_vel)
        # +' vel = '+str(self.vel))
         if self.vel.y - gravity > 0 and enemy.rect.top >= self.rect.bottom - y_vel:
-            self.vel.y = -8
+            self.vel.y = Move.PLAYER_POP
             return True
         else:
             self.is_dead = True
