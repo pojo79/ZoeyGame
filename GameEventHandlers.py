@@ -13,6 +13,8 @@ class GamePlayEventHandler(object):
 
     def handleEvent(self):   
         for event in pygame.event.get(): 
+            if event.type == pygame.QUIT:
+                self.game.gameOver = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     self.game.gameOver = True
@@ -27,3 +29,14 @@ class GamePlayEventHandler(object):
                     self.player.move(GameSetting.Move.RIGHT, True)
                 if event.key == pygame.K_LEFT:
                     self.player.move(GameSetting.Move.LEFT, True)
+                if event.key == pygame.K_SPACE:
+                    self.player.jump()
+            if event.type == pygame.JOYHATMOTION:
+                if event.value[0] == 1:
+                    self.player.move(GameSetting.Move.RIGHT)
+                if event.value[0] == -1:
+                    self.player.move(GameSetting.Move.LEFT)
+            if event.type == pygame.JOYBUTTONDOWN:
+                self.player.jump()
+            if event.type == pygame.JOYBUTTONUP:
+                self.player.jump()
