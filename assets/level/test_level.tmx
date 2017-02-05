@@ -1,16 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="52">
- <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256">
+ <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="../art/goodly-2x.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="257" name="Mushroom" tilewidth="32" tileheight="128" tilecount="7" columns="0">
+  <tile id="1">
+   <image width="32" height="32" source="../art/mushroom_small.png"/>
+  </tile>
+  <tile id="2">
+   <image width="32" height="64" source="../art/flag.png"/>
+  </tile>
+  <tile id="5">
+   <image width="32" height="128" source="../art/flag_large.png"/>
+  </tile>
+  <tile id="6">
+   <image width="32" height="20" source="../art/peeper.png"/>
+  </tile>
+  <tile id="7">
+   <image width="32" height="32" source="../art/firehydrant.png"/>
+  </tile>
+  <tile id="8">
+   <image width="32" height="32" source="../art/grass_block.png"/>
+  </tile>
+  <tile id="9">
+   <image width="32" height="32" source="../art/dirt.png"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="267" name="concrete_tiles" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+  <image source="../art/concrete_tiles.png" width="96" height="96"/>
+ </tileset>
+ <tileset firstgid="276" name="TileSet1" tilewidth="32" tileheight="32" tilecount="100" columns="10">
+  <image source="TileSet1.png" width="320" height="320"/>
  </tileset>
  <layer name="Tile Layer 1" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztmN0OwiAMhbepibf+X7v5/s8oSyTBylZa6mB6vqQxKkjLaQuuacBa6Uo7AAAASi7Ors5upR0BwJD29bot6sX6afkhs/j+4u3X+8zO4DfonlE7GayxRvaKOWdzL965OxsE46390ZzfUh8Ozo4JlpKXD/Jeo+kcUj2oP98mFq/UhzHGPsFi+0D7OV17zCculyT5Q/XgzhPvjyQvcnpurH44PWgMOXrQvdTko2ROai1bWu55NRUfF8u4rlQPupZkb31eSOak5o6lSfpjjKn4uFgGhV9aPcI7lORshB4yPZa4X9WmR8d8H+5ROLam+tASxuD7bGk9OKzqg/4Py9HDqm5qqA+uHig1nh/+801SBNPUoIeUJfXg7ruxZx85z4y4GML74j/qUfL8QH3wa0GPT6AH9ODWtgJ6QA+pHql7Aj3i9gSe5WAo
+   eJztWEkOwjAMhCJQr+xnKP9/I80hUmSS2hObNlCP5AOQxst4nNDNxvGr6JYOwOFwrBaHre7562i30e4WwTgcjUApi9WhKxRMW8c4X6L9+5zZG+xBa0btbOBDi1K/aNdOoa/Y82LjuojHaAOw3jqemvMbjeE42klgkr58kc99dlU9UD5oPN9GLl80hpDjU2C5OlDZUN+hn7heQvon8hH1ysk2xoP0RTpz0VmT088UH2F/6kLDB61lTT8iz0i1bGna86qUH5dL8IvyQX1Ja5v2BcKHtHcsDZmPOZTy43IZKuKq5SO9QyFno/OB8THH/ao1Pjrm97RG6dqW9FGLNIc4Z5fmg4OVPuj/MA0fVrppQR+cHihaPD/i9ztRBmW0wAeKOfng7ru5dx+ad0ZcDul9cY18LHl+uD54X87HJ5wP54PzbQXnw/lA+ZDWxPnI2xtMwWBD
   </data>
  </layer>
- <layer name="Tile Layer 2" width="100" height="25">
+ <layer name="Tile Layer 3" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1MEJwCAABEFDPhZgCfZfY96CT+GMzlSwcHClAAAAAPAHbzoA4FBPOiCkpgOAZW79MeZaOoBBTwcwsMde7LEXe3CSD5VsALI=
+   eJztmVEOgyAMQN3nzLJ5LB33v8/wQ2NQhq2iRd9L+gfU8NKWxKqCUnk+zv4CAAAdne9fXx+OPgYAAFAMmvndCmf9kCMVvCF01MJ769evDfjPUv0c6UNaixbJ3RdiPlJ9yd20PnL3hdj+NXnfPj6RaPChPl+bFx9yH6mePd3/CuYKPuaUUh/TeePwMSJ9w2z1EduPD/35OfIu+bjCe3dvH+E/xCN9XIG9fYTr8SEDH7bAhy3wYQt82OIHX14brg==
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="100" height="25" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt1ssJgDAQBUA/lxRgCfZfowTJIZ5EwQ3rTAN55JHsThMAAE+VOToB8MbiDUN6d2f19T8YccbXTGt0CCAd+9Dpb9fQei+xMSC1r/fJepw/nWaLDkBnjw5ARx9j0cdY9EEmB2XhAO4=
   </data>
  </layer>
  <objectgroup name="level layout">
@@ -42,42 +76,42 @@
   <object id="33" name="ground" x="2784" y="576" width="96" height="12"/>
   <object id="34" name="ground" x="3040" y="192" width="160" height="12"/>
   <object id="35" name="ground" x="2912" y="256" width="32" height="12"/>
-  <object id="36" name="goal" x="3168" y="160" width="32" height="32"/>
+  <object id="36" name="goal" x="3168" y="129" width="32" height="63"/>
   <object id="37" name="player_spawn" x="64" y="288"/>
  </objectgroup>
  <objectgroup name="Enemy Layer">
-  <object id="43" name="snake" x="2424" y="192" width="32" height="32">
+  <object id="43" name="snake" x="2424" y="136" width="96" height="90">
    <properties>
     <property name="travel" value="70"/>
    </properties>
   </object>
-  <object id="44" name="snake" x="1952" y="544" width="32" height="32">
+  <object id="44" name="snake" x="1952" y="488" width="96" height="90">
    <properties>
     <property name="travel" value="40"/>
    </properties>
   </object>
-  <object id="45" name="snake" x="1632" y="320" width="32" height="32">
+  <object id="45" name="snake" x="1632" y="264" width="96" height="90">
    <properties>
     <property name="travel" value="0"/>
    </properties>
   </object>
-  <object id="46" name="snake" x="1384" y="480" width="32" height="32">
+  <object id="46" name="snake" x="1384" y="424" width="96" height="90">
    <properties>
     <property name="travel" value="50"/>
    </properties>
   </object>
-  <object id="47" name="snake" x="864" y="448" width="32" height="32">
+  <object id="47" name="snake" x="864" y="392" width="96" height="90">
    <properties>
     <property name="travel" value="5"/>
    </properties>
   </object>
-  <object id="48" name="snake" x="512" y="96" width="32" height="32">
+  <object id="48" name="snake" x="512" y="40" width="96" height="90">
    <properties>
     <property name="travel" value="45"/>
    </properties>
   </object>
   <object id="49" name="eye" x="1920" y="288" width="32" height="32"/>
   <object id="50" name="eye" x="1376" y="256" width="32" height="32"/>
-  <object id="51" name="eye" x="384" y="512" width="32" height="32"/>
+  <object id="51" name="eye" x="385" y="512" width="32" height="32"/>
  </objectgroup>
 </map>
