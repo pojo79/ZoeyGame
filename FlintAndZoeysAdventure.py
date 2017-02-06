@@ -1,10 +1,13 @@
-from GameSprites import *
 import GameEventHandlers
 import pygame
 import pytmx
 import os
 import numpy
 import GameSetting
+from PlayerSprite import *
+from EnemySprites import *
+from GameObjects import obstacle
+import GameObjects
 
 # initiate pygame
 pygame.init()
@@ -29,6 +32,8 @@ class Level(object):
         self.spawn = (0, 0)
         self.ground = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
+        self.powerups = pygame.sprite.Group()
+        self.ammo = pygame.sprite.Group()
         self.goal = 0
 
     def render(self, surface):
@@ -71,13 +76,16 @@ class FlintAndZoeyGame(object):
         pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")
 
     def loadLevel(self):
-        self.level = Level("/assets/level/test_level.tmx", -.15, 0.8)
+        #TODO externalize level variables
+        self.level = Level("/assets/level/test_level.tmx", -.2, 0.8)
         self.tileSurface = self.level.make_map()
 
         for tile_object in self.level.tmxdata.objects:
             if tile_object.name == "ground":
                 self.level.ground.add(
                     obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
+            if tile_object.name == "nerf_pistol":
+                self.level.powerups.add(GameObjects.nerf_pistol(tile_object.x, tile_object.y))
             if tile_object.name == "player_spawn":
                 self.level.spawn = (tile_object.x, tile_object.y)
             if tile_object.name == "goal":
@@ -93,11 +101,14 @@ class FlintAndZoeyGame(object):
 
             self.allGameObjects.add(self.level.ground)
             self.allGameObjects.add(self.level.enemies)
+            self.allGameObjects.add(self.level.ammo)
+            self.allGameObjects.add(self.level.powerups)
 
         self.rightBounds = 450
         self.leftBounds = self.rightBounds - 100
 
     def shiftAll(self):
+        #TODO something in this method causing player to "skate"
         xdiff = 0
         if self.player.pos.x > self.rightBounds:
             if self.world_x <= 0 - self.tileSurface.get_width() + game_display.get_width():
@@ -123,11 +134,15 @@ class FlintAndZoeyGame(object):
 
     def gameLoop(self):
         pygame.mixer.music.play()
-        pygame.mixer.music.set_volume(.35)
+        pygame.mixer.music.set_volume(Game.MUSIC_VOLUME)
         handler = GameEventHandlers.GamePlayEventHandler(self, self.player)
         while not self.gameOver:
 
             self.game_display.blit(self.tileSurface, (self.world_x, 0))
+            bullets = self.player.get_bullets()
+
+            self.do_player_bullet_collisions(bullets)
+            
             if pygame.sprite.collide_rect(self.level.goal, self.player):
                 print("yea, you win")
                 self.gameOver = True
@@ -147,6 +162,7 @@ class FlintAndZoeyGame(object):
 
             
             handler.handleEvent()
+            bullets.update(self.level.level_gravity, self.game_display.get_width(), self.game_display.get_height())
             self.player.update(self.level.level_friction,
                                self.level.level_gravity, self.tileSurface.get_height())
             self.level.enemies.update(
@@ -158,6 +174,8 @@ class FlintAndZoeyGame(object):
             self. shiftAll()
 
             # draw items
+            bullets.draw(self.game_display)
+            self.level.powerups.draw(self.game_display)
             self.level.enemies.draw(self.game_display)
             self.player.draw(self.game_display)
             pygame.display.update()
@@ -171,6 +189,31 @@ class FlintAndZoeyGame(object):
             self.fps_clock.tick(GameSetting.Game.FPS)
         pygame.mixer.music.stop()
         self.do_game_over()
+    
+    def do_player_bullet_collisions(self, bullets):
+        if bullets.sprites:
+            capped = pygame.sprite.groupcollide(bullets, self.level.enemies, False, True)
+            if capped:
+                for dart in capped:
+                    if dart.velocity.x > 0:
+                        dart.acceleration = vec(0, 0)
+                        dart.velocity = vec(-GameSetting.Game.DART_BOUNCE, self.level.level_gravity)
+                    elif dart.velocity.x < 0:
+                        dart.velocity = vec(GameSetting.Game.DART_BOUNCE, self.level.level_gravity)
+            
+            ground_capped = pygame.sprite.groupcollide(bullets, self.level.ground, False, False)
+            if ground_capped:
+                for dart in ground_capped:
+                    self.level.ammo.add(dart)
+                    dart.acceleration = vec(0, 0)
+                    dart.velocity = vec(0, 0)
+                    dart.rect.y = ground_capped[dart][0].rect.top - dart.rect.height
+
+            pickup_ammo = pygame.sprite.spritecollide(self.player, bullets, True)
+            if pickup_ammo:
+                for ammo in pickup_ammo:
+                    self.player.add_ammo(1)
+        self.allGameObjects.add(self.level.ammo)
 
     def do_game_over(self):
         ending = True

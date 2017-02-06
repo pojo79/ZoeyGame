@@ -28,6 +28,8 @@ class GamePlayEventHandler(object):
                     self.player.move(GameSetting.Move.LEFT)
                 if event.key == pygame.K_SPACE:
                     self.player.add_jump_to_buffer()
+                if event.key == pygame.K_RCTRL or event.key == pygame.K_LCTRL:
+                    self.player.shoot()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
                     self.player.set_run(False)
@@ -66,6 +68,8 @@ class GamePlayEventHandler(object):
                     self.player.add_jump_to_buffer()
                 if event.button == GameSetting.Control.RUN_BUTTON:
                     self.player.set_run(True)
+                if event.button == GameSetting.Control.SHOOT_BUTTON:
+                    self.player.shoot()
             if event.type == pygame.JOYBUTTONUP:
                 if event.button == GameSetting.Control.RUN_BUTTON:
                     self.player.set_run(False)

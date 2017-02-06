@@ -3,11 +3,13 @@ class Move():
     RIGHT = 'right'
     LEFT  = 'left'
     STOP = 'stop'
-    PLAYER_MOVE = .8 
-    PLAYER_RUN = 1.25
+    PLAYER_MOVE = 1 
+    PLAYER_RUN = 1.6
     PLAYER_JUMP = -15
     PLAYER_POP = -8
-    ZERO_THRESHOLD = .0001
+    ZERO_THRESHOLD = .001
+    PLAYER_BULLET_SPEED = 12
+    PLAYER_BULLET_ARC = -4
 
 class Control():
     JOYSTICK_DEADZONE = .3
@@ -18,4 +20,7 @@ class Control():
 
 class Game():
     FPS = 60
+    DART_BOUNCE = 2
+    MUSIC_VOLUME = 0
+
 
