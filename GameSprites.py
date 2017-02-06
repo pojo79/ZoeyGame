@@ -9,7 +9,7 @@ class PlayerSprite(pygame.sprite.Sprite):
 
     def __init__(self, start_coord):
         pygame.sprite.Sprite.__init__(self)
-        self.MOVE_SPEED = 1.75
+        self.MOVE_SPEED = Move.PLAYER_MOVE
         self.space_pushed = False
         self.is_dead = False
         self.image_right = pygame.image.load(
@@ -58,23 +58,26 @@ class PlayerSprite(pygame.sprite.Sprite):
     def add_jump_to_buffer(self):
         self.jump_buffer = pygame.time.get_ticks()
 
+    def set_move_speed(self):
+        if self.MOVE_SPEED == Move.PLAYER_MOVE:
+            if self.run and self.onGround:
+                self.MOVE_SPEED = Move.PLAYER_RUN
+        if self.MOVE_SPEED == Move.PLAYER_RUN:
+            if not self.run and self.onGround:
+                self.MOVE_SPEED = Move.PLAYER_MOVE
+        if self.direction == Move.LEFT and self.acc.x > 0 and not self.onGround:
+            self.MOVE_SPEED = self.MOVE_SPEED/3
+        if self.direction == Move.RIGHT and self.acc.x < 0 and not self.onGround:
+            self.MOVE_SPEED = self.MOVE_SPEED/3
+
     def update(self, friction, gravity, floor):
        # print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
+        self.set_move_speed()
         if self.direction == Move.LEFT:
-            if self.run:
-                self.acc.x = -Move.PLAYER_RUN
-            else:
-                self.acc.x = -Move.PLAYER_MOVE
-            if not self.onGround and self.vel.x > .05:
-                self.acc.x = -Move.PLAYER_MOVE / 2
+            self.acc.x = -self.MOVE_SPEED
             self.image = self.image_left
         if self.direction == Move.RIGHT:
-            if self.run:
-                self.acc.x = Move.PLAYER_RUN
-            else:
-                self.acc.x = Move.PLAYER_MOVE
-            if not self.onGround and self.vel.x < -.05:
-                self.acc.x = Move.PLAYER_MOVE / 2
+            self.acc.x = self.MOVE_SPEED
             self.image = self.image_right
         self.jump()
         
