@@ -10,6 +10,10 @@ pygame.init()
 game_display = pygame.display.set_mode((1024, 768))
 pygame.display.set_caption("Flint and Zoeys Adventure")
 
+if pygame.joystick.get_count() > 0:
+    joystick = pygame.joystick.Joystick(0)
+    joystick.init()
+
 
 class Level(object):
 
@@ -70,7 +74,7 @@ class FlintAndZoeyGame(object):
         pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")
 
     def loadLevel(self):
-        self.level = Level("/assets/level/test_level.tmx", -.25, 0.8)
+        self.level = Level("/assets/level/test_level.tmx", -.15, 0.8)
         self.tileSurface = self.level.make_map()
 
         for tile_object in self.level.tmxdata.objects:
@@ -173,15 +177,13 @@ class FlintAndZoeyGame(object):
 
     def do_game_over(self):
         ending = True
-
+        
+        handler = GameEventHandlers.GameOverHandler()
         while ending:
             self.game_over_screen.blit(self.game_over_screen, self.game_over_screen.get_rect())
             game_display.blit(self.game_over_screen, self.game_over_screen.get_rect())
             pygame.display.update()
-
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    ending = False
+            ending = handler.handle_event()
 
     def do_death_sequence(self):
         time = pygame.time.get_ticks()

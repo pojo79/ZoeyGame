@@ -22,6 +22,9 @@ class PlayerSprite(pygame.sprite.Sprite):
         self.vel = vec(0, 0)
         self.pos = vec(start_coord[0], start_coord[1])
         self.acc = vec(0, 0)
+        self.jump_buffer = None
+        self.duck = False
+        self.run = False
         self.onGround = False
         self.rect.move_ip(self.pos)
         self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
@@ -34,29 +37,52 @@ class PlayerSprite(pygame.sprite.Sprite):
             self.direction = Move.STOP
         elif not stop_movement:
             self.direction = direction
+    
+    def set_duck(self, duck):
+        self.duck = duck
 
+    def set_run(self, run):
+        self.run = run
+        
     def jump(self):
-        if self.onGround:
-            self.jump_sound.play()
-            self.onGround = False
-            self.acc.y = Move.PLAYER_JUMP
+        if self.onGround and not self.jump_buffer == None:
+            if pygame.time.get_ticks() - self.jump_buffer <= Control.JUMP_FOGIVENESS:
+                self.jump_sound.play()
+                self.onGround = False
+                self.acc.y = Move.PLAYER_JUMP
+                self.jump_buffer = None
+    
+    ''' add a jumper to the buffer with the current time of button press
+    This will make jumping more responsive since you can press button slightly before hitting the ground and still
+    have jump register '''
+    def add_jump_to_buffer(self):
+        self.jump_buffer = pygame.time.get_ticks()
 
     def update(self, friction, gravity, floor):
        # print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
         if self.direction == Move.LEFT:
-            self.acc.x = -Move.PLAYER_MOVE
+            if self.run:
+                self.acc.x = -Move.PLAYER_RUN
+            else:
+                self.acc.x = -Move.PLAYER_MOVE
             if not self.onGround and self.vel.x > .05:
                 self.acc.x = -Move.PLAYER_MOVE / 2
             self.image = self.image_left
         if self.direction == Move.RIGHT:
-            self.acc.x = Move.PLAYER_MOVE
+            if self.run:
+                self.acc.x = Move.PLAYER_RUN
+            else:
+                self.acc.x = Move.PLAYER_MOVE
             if not self.onGround and self.vel.x < -.05:
                 self.acc.x = Move.PLAYER_MOVE / 2
             self.image = self.image_right
+        self.jump()
+        
         self.acc.x += self.vel.x * friction
         if math.fabs(self.acc.x) <= Move.ZERO_THRESHOLD:
             self.acc.x = 0
             self.vel.x = 0
+        
         self.vel += self.acc
         self.pos += self.vel + .5 * self.acc
         self.rect.x = self.pos.x
@@ -65,6 +91,9 @@ class PlayerSprite(pygame.sprite.Sprite):
         if self.pos.y > floor:
             self.is_dead = True
         self.acc = vec(0, gravity)
+        
+        self.onGround = False
+
     def set_position(self, object):
         y_vel = math.ceil(self.vel.y + .5 * self.acc.y)
         #print("object top = " + str(object.rect.top)+' self bottom = ' +str(self.rect.bottom) + " y_vel = "+str(y_vel))
@@ -169,7 +198,7 @@ class eye(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("./assets/art/peeper_tall.png")
+        self.image = pygame.image.load("./assets/art/golfer.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
