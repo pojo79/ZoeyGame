@@ -6,7 +6,7 @@ import numpy
 import GameSetting
 from PlayerSprite import *
 from EnemySprites import *
-from GameObjects import obstacle
+from GameObjects import Obstacle
 import GameObjects
 
 # initiate pygame
@@ -83,13 +83,13 @@ class FlintAndZoeyGame(object):
         for tile_object in self.level.tmxdata.objects:
             if tile_object.name == "ground":
                 self.level.ground.add(
-                    obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
+                    Obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
             if tile_object.name == "nerf_pistol":
-                self.level.powerups.add(GameObjects.nerf_pistol(tile_object.x, tile_object.y))
+                self.level.powerups.add(GameObjects.NerfPistol(tile_object.x, tile_object.y))
             if tile_object.name == "player_spawn":
                 self.level.spawn = (tile_object.x, tile_object.y)
             if tile_object.name == "goal":
-                self.level.goal = obstacle(
+                self.level.goal = Obstacle(
                     tile_object.x, tile_object.y, tile_object.width, tile_object.height)
                 self.allGameObjects.add(self.level.goal)
             if tile_object.name == "snake":
@@ -143,22 +143,7 @@ class FlintAndZoeyGame(object):
 
             self.do_player_bullet_collisions(bullets)
             
-            if pygame.sprite.collide_rect(self.level.goal, self.player):
-                print("yea, you win")
-                self.gameOver = True
-
-            hits = pygame.sprite.spritecollide(
-                self.player, self.level.enemies, False)
-            if hits:
-                for hit in hits:
-                    if self.player.kill_enemy(hit, self.level.level_gravity):
-                        self.splat.play()
-                        hit.kill()
-
-            collide = pygame.sprite.spritecollide(
-                self.player, self.level.ground, False)
-            if collide:
-                self.player.set_position(collide[0])
+            self.do_player_collisions()
 
             
             handler.handleEvent()
@@ -190,6 +175,27 @@ class FlintAndZoeyGame(object):
         pygame.mixer.music.stop()
         self.do_game_over()
     
+    def do_player_collisions(self):
+        if pygame.sprite.collide_rect(self.level.goal, self.player):
+            print("yea, you win")
+            self.gameOver = True
+
+        hits = pygame.sprite.spritecollide(self.player, self.level.enemies, False)
+        if hits:
+            for hit in hits:
+                if self.player.kill_enemy(hit, self.level.level_gravity):
+                    self.splat.play()
+                    hit.kill()
+
+        collide = pygame.sprite.spritecollide(self.player, self.level.ground, False)
+        if collide:
+            self.player.set_position(collide[0])
+
+        get_powerup = pygame.sprite.spritecollide(self.player, self.level.powerups, True)
+        if get_powerup:
+            self.player.set_gun(get_powerup[0])
+
+
     def do_player_bullet_collisions(self, bullets):
         if bullets.sprites:
             capped = pygame.sprite.groupcollide(bullets, self.level.enemies, False, True)

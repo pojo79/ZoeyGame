@@ -1,7 +1,7 @@
 import pygame
 import math
 from GameSetting import *
-from GameObjects import projectile
+from GameObjects import Projectile
 
 vec = pygame.math.Vector2
 
@@ -12,8 +12,8 @@ class PlayerSprite(pygame.sprite.Sprite):
         self.MOVE_SPEED = Move.PLAYER_MOVE
         self.space_pushed = False
         self.is_dead = False
-        self.image_right = pygame.image.load(
-            "./assets/art/zoeyPlaceHolder.png")
+        self.nerf_dart_image = pygame.image.load("./assets/art/nerf_dart.png").convert()
+        self.image_right = pygame.image.load("./assets/art/zoeyPlaceHolder.png")
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
         self.rect = self.image.get_rect()
@@ -27,6 +27,7 @@ class PlayerSprite(pygame.sprite.Sprite):
         self.duck = False
         self.run = False
         self.onGround = False
+        self.gun = None
         self.ammo = 5
         self.max_bullets = 2
         self.rect.move_ip(self.pos)
@@ -75,7 +76,7 @@ class PlayerSprite(pygame.sprite.Sprite):
                 self.MOVE_SPEED = Move.PLAYER_MOVE
 
     def update(self, friction, gravity, floor):
-        print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
+        #print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
         self.set_move_speed()
         if self.direction == Move.LEFT:
             self.acc.x = -self.MOVE_SPEED
@@ -120,18 +121,21 @@ class PlayerSprite(pygame.sprite.Sprite):
         else:
             self.is_dead = True
             return False
+    
+    def set_gun(self, gun):
+        self.gun = gun
 
     def shoot(self):
         #TODO move image loading to player init, save copy of image to use
-        if len(self.bullets.sprites()) < self.max_bullets and self.ammo > 0:
-            nerf_image = pygame.image.load("./assets/art/nerf_dart.png").convert()
-            self.ammo -=1
-            if self.facing == Move.LEFT:   
-                self.bullets.add(projectile(-Move.PLAYER_BULLET_SPEED, Move.PLAYER_BULLET_ARC,self.rect.midleft,nerf_image))
+        if not self.gun == None and len(self.bullets.sprites()) < self.max_bullets and self.gun.get_ammo_amount() > 0:
+            self.gun.set_ammo_amount(self.gun.get_ammo_amount() - 1)
+            if self.facing == Move.LEFT:
+                self.bullets.add(Projectile(-self.gun.get_x_shoot_speed(),
+                                            self.gun.get_y_shoot_speed(), self.rect.midleft, self.nerf_dart_image))
             if self.facing == Move.RIGHT:
-                self.bullets.add(projectile(Move.PLAYER_BULLET_SPEED, Move.PLAYER_BULLET_ARC,self.rect.midright, nerf_image))
-    
+                self.bullets.add(Projectile(self.gun.get_x_shoot_speed(
+                ), self.gun.get_y_shoot_speed(), self.rect.midright, self.nerf_dart_image))
+
     def add_ammo(self, amount):
-        print(self.ammo)
-        self.ammo += amount
-        print(self.ammo)
+        if not self.gun == None:
+            self.gun.set_ammo_amount(self.gun.get_ammo_amount() + 1)

@@ -7,7 +7,7 @@ class Move():
     PLAYER_RUN = 1.6
     PLAYER_JUMP = -15
     PLAYER_POP = -8
-    ZERO_THRESHOLD = .001
+    ZERO_THRESHOLD = .00001
     PLAYER_BULLET_SPEED = 12
     PLAYER_BULLET_ARC = -4
 
@@ -21,6 +21,12 @@ class Control():
 class Game():
     FPS = 60
     DART_BOUNCE = 2
-    MUSIC_VOLUME = 0
+    MUSIC_VOLUME = .25
+    NERF_PISTOL_SPEED = 12
+    NERF_PISTOL_ARC = -4
+    NERF_PISTOL_START_AMMO = 2
+    NERF_RIFLE_SPEED = 18
+    NERF_RIFLE_ARC = -3
+    NERF_RIFLE_START_AMMO = 6
 
 
