@@ -4,6 +4,7 @@ import pygame
 import pytmx
 import os
 import numpy
+import GameSetting
 
 # initiate pygame
 pygame.init()
@@ -37,10 +38,6 @@ class Level(object):
                 for x, y, image in layer.tiles():
                     surface.blit(image, (x * self.tmxdata.tilewidth,
                                          y * self.tmxdata.tileheight))
-
-    def load_objects(self):
-        for tile_object in self.tmxdata.objects:
-            print(tile_object)
 
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
@@ -171,7 +168,7 @@ class FlintAndZoeyGame(object):
                 self.respawn_player()
                 handler.set_player(self.player)
 
-            self.fps_clock.tick(60)
+            self.fps_clock.tick(GameSetting.Game.FPS)
         pygame.mixer.music.stop()
         self.do_game_over()
 
@@ -197,23 +194,13 @@ class FlintAndZoeyGame(object):
         pygame.time.delay(1000)
 
     def respawn_player(self):
-        print('Player Lives = ' + str(self.player_lives))
         if self.player_lives == 0:
-            print('In if block')
             self.gameOver = True
         else:
             self.world_x = 0
             self.loadLevel()
             self.player = PlayerSprite(self.level.spawn)
             self.player_lives -= 1
-        print('Respawn Lives left = ' + str(self.player_lives))
 
-    def handleEvent(self, pygame_event):
-        for event in pygame_event.get():
-            if event.type == pygame.QUIT:
-                self.gameOver = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    self.gameOver = True
 
 FlintAndZoeyGame(game_display)
