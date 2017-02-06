@@ -4,11 +4,16 @@ import pygame
 import pytmx
 import os
 import numpy
+import GameSetting
 
 # initiate pygame
 pygame.init()
 game_display = pygame.display.set_mode((1024, 768))
 pygame.display.set_caption("Flint and Zoeys Adventure")
+
+if pygame.joystick.get_count() > 0:
+    joystick = pygame.joystick.Joystick(0)
+    joystick.init()
 
 
 class Level(object):
@@ -33,10 +38,6 @@ class Level(object):
                 for x, y, image in layer.tiles():
                     surface.blit(image, (x * self.tmxdata.tilewidth,
                                          y * self.tmxdata.tileheight))
-
-    def load_objects(self):
-        for tile_object in self.tmxdata.objects:
-            print(tile_object)
 
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
@@ -70,7 +71,7 @@ class FlintAndZoeyGame(object):
         pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")
 
     def loadLevel(self):
-        self.level = Level("/assets/level/test_level.tmx", -.25, 0.8)
+        self.level = Level("/assets/level/test_level.tmx", -.15, 0.8)
         self.tileSurface = self.level.make_map()
 
         for tile_object in self.level.tmxdata.objects:
@@ -167,21 +168,19 @@ class FlintAndZoeyGame(object):
                 self.respawn_player()
                 handler.set_player(self.player)
 
-            self.fps_clock.tick(60)
+            self.fps_clock.tick(GameSetting.Game.FPS)
         pygame.mixer.music.stop()
         self.do_game_over()
 
     def do_game_over(self):
         ending = True
-
+        
+        handler = GameEventHandlers.GameOverHandler()
         while ending:
             self.game_over_screen.blit(self.game_over_screen, self.game_over_screen.get_rect())
             game_display.blit(self.game_over_screen, self.game_over_screen.get_rect())
             pygame.display.update()
-
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    ending = False
+            ending = handler.handle_event()
 
     def do_death_sequence(self):
         time = pygame.time.get_ticks()
@@ -195,23 +194,13 @@ class FlintAndZoeyGame(object):
         pygame.time.delay(1000)
 
     def respawn_player(self):
-        print('Player Lives = ' + str(self.player_lives))
         if self.player_lives == 0:
-            print('In if block')
             self.gameOver = True
         else:
             self.world_x = 0
             self.loadLevel()
             self.player = PlayerSprite(self.level.spawn)
             self.player_lives -= 1
-        print('Respawn Lives left = ' + str(self.player_lives))
 
-    def handleEvent(self, pygame_event):
-        for event in pygame_event.get():
-            if event.type == pygame.QUIT:
-                self.gameOver = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    self.gameOver = True
 
 FlintAndZoeyGame(game_display)
