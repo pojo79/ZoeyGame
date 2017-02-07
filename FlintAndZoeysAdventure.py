@@ -116,6 +116,7 @@ class FlintAndZoeyGame(object):
                 if(self.player.rect.right > game_display.get_width()):
                     self.player.pos.x = game_display.get_width() - self.player.rect.width
             else:
+                print('in else '+ str(self.player.pos.x) + ' right bounds ' + str(self.rightBounds))
                 xdiff = math.floor(self.rightBounds - self.player.pos.x)
                 self.player.pos.x = self.rightBounds
 

@@ -87,7 +87,7 @@ class PlayerSprite(pygame.sprite.Sprite):
         self.jump()
         
         self.acc.x += self.vel.x * friction
-        if math.fabs(self.acc.x) <= Move.ZERO_THRESHOLD:
+        if math.fabs(self.acc.x) <= Move.ZERO_THRESHOLD and self.onGround:
             self.acc.x = 0
             self.vel.x = 0
         
