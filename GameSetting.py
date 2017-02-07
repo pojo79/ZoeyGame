@@ -20,6 +20,7 @@ class Control():
 
 class Game():
     FPS = 60
+    COLOR_KEY = (227,59,158)
     DART_BOUNCE = 2
     MUSIC_VOLUME = .25
     NERF_PISTOL_SPEED = 12

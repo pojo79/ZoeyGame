@@ -13,7 +13,7 @@ class PlayerSprite(pygame.sprite.Sprite):
         self.space_pushed = False
         self.is_dead = False
         self.nerf_dart_image = pygame.image.load("./assets/art/nerf_dart.png").convert()
-        self.image_right = pygame.image.load("./assets/art/zoeyPlaceHolder.png")
+        self.image_right = pygame.image.load("./assets/art/zoeyPlaceHolder.png").convert_alpha()
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
         self.rect = self.image.get_rect()

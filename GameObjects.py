@@ -40,7 +40,8 @@ class NerfGun(pygame.sprite.Sprite):
 
     def __init__(self, start_x, start_y, image_path, x_speed, y_speed, ammo):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(image_path)
+        self.image = pygame.image.load(image_path).convert()
+        self.image.set_colorkey(Game.COLOR_KEY)
         self.rect = self.image.get_rect()
         self.rect.move_ip(start_x, start_y)
         self.x_shoot_speed = x_speed
