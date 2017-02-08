@@ -50,7 +50,10 @@ class Projectile(SpriteBase.GameSprite):
 
 class AnimatedBullet(Projectile):
     def __init__(self, acceleration_x, acceleration_y, start_coord, spriteSheet, sprite_width, sprite_height, sprite_length):
+        pygame.sprite.Sprite.__init__(self)
         self.acceleration = vec(acceleration_x, acceleration_y)
+        self.sprite_width = sprite_width
+        self.sprite_height = sprite_height
         self.last_frame = 0
         self.last_update = 0
         self.current_frame = 0
@@ -58,7 +61,7 @@ class AnimatedBullet(Projectile):
         self.velocity = vec(0,0)
         self.position = vec(start_coord)
         self.sprite_length = sprite_length
-        self.spriteSheet = SpriteBase.Spritesheet(spriteSheet)
+        self.spriteSheet = spriteSheet
         self.frames = self.load_frames()
         self.image = self.frames[0]
         self.rect = self.image.get_rect()
@@ -67,8 +70,8 @@ class AnimatedBullet(Projectile):
 
     def load_frames(self):
         frames = []
-        for I in self.sprite_length:
-            frames.append(self.spriteSheet.get_image_row_column(sprite_width,sprite_height,I,0))
+        for I in range(self.sprite_length):
+            frames.append(self.spriteSheet.get_image_row_column(self.sprite_width,self.sprite_height,I,0))
         return frames
 
     def animate(self):
@@ -76,7 +79,7 @@ class AnimatedBullet(Projectile):
         if (now - self.last_frame >= self.UPDATE_FRAME_ON):
             self.last_frame = now
             self.current_frame += 1
-            if self.current_frame >= len(self.sprite_length):
+            if self.current_frame >= self.sprite_length:
                 self.current_frame = 0
             self.image = self.frames[self.current_frame]
 

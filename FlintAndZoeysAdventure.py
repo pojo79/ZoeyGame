@@ -1,7 +1,5 @@
 import GameEventHandlers
 import pygame
-import pytmx
-import os
 import numpy
 import GameSetting
 from PlayerSprite import *
@@ -9,6 +7,7 @@ from EnemySprites import *
 from ScreenUI import *
 from GameObjects import Obstacle
 import GameObjects
+from Level import *
 
 # initiate pygame
 pygame.init()
@@ -18,40 +17,6 @@ pygame.display.set_caption("Flint and Zoeys Adventure")
 if pygame.joystick.get_count() > 0:
     joystick = pygame.joystick.Joystick(0)
     joystick.init()
-
-
-class Level(object):
-
-    def __init__(self, filename, friction, gravity):
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        tm = pytmx.load_pygame(dir_path + filename, pixelalpha=True)
-        self.width = tm.width * tm.tilewidth
-        self.height = tm.height * tm.tileheight
-        self.tmxdata = tm
-        self.level_friction = friction
-        self.level_gravity = gravity
-        self.spawn = (0, 0)
-        self.ground = SpriteBase.OnScreenGroup()
-        self.enemies = SpriteBase.OnScreenGroup()
-        self.powerups = SpriteBase.OnScreenGroup()
-        self.ammo = SpriteBase.OnScreenGroup()
-        self.checkpoints = SpriteBase.OnScreenGroup()
-        self.goal = 0
-
-    def render(self, surface):
-        getTile = self.tmxdata.get_tile_image
-        for layer in self.tmxdata.visible_layers:
-            if isinstance(layer, pytmx.TiledTileLayer):
-                for x, y, image in layer.tiles():
-                    surface.blit(image, (x * self.tmxdata.tilewidth,
-                                         y * self.tmxdata.tileheight))
-
-    def make_map(self):
-        temp_surface = pygame.Surface((self.width, self.height))
-        temp_surface.fill((0, 100, 250))  # blue background
-        self.render(temp_surface)
-        return temp_surface
-
 
 class FlintAndZoeyGame(object):
 
@@ -64,8 +29,8 @@ class FlintAndZoeyGame(object):
         self.player_lives = GameSetting.Game.PLAYER_START_LIVES
         self.death_time = None
         self.event_handler = None #set to start screen handler when start screen created
-        self.death_scene = pygame.image.load("./assets/art/death_scene.png")
-        self.game_over_screen = pygame.image.load("./assets/art/game_over.png").convert()
+        self.death_scene = pygame.image.load(Game.DEATH_SCENE_OVERLAY).convert_alpha()
+        self.game_over_screen = pygame.image.load(Game.GAME_OVER_OVERLAY).convert()
         self.allGameObjects = pygame.sprite.Group()
         self.loadLevel()
         self.load_music()

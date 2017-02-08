@@ -26,6 +26,8 @@ class Game():
     NUMBERS_SPRITE_SHEET = "./assets/art/numbers.png"
     NUMBERS_SPRITE_WIDTH = 24
     NUMBERS_SPRITE_HEIGHT = 24
+    DEATH_SCENE_OVERLAY = "./assets/art/death_scene.png"
+    GAME_OVER_OVERLAY = "./assets/art/game_over.png"
     OVERLAY_IMAGE = "./assets/art/screen_overlay.png"
     OVERLAY_LIVES_POS = 110
     OVERLAY_AMMO_POS = 310
@@ -56,8 +58,8 @@ class Enemy():
     SKELETON_SPRITE_BULLET_LENGTH = 2
     SKELETON_BULLET_SPRITE = "./assets/art/skeleton_bullet.png"
     SKELETON_SHOOT_RATE = 2500
-    SKELETON_BULLET_ARC = 0
-    SKELETON_BULLET_SPEED = 12
+    SKELETON_BULLET_ARC = -4
+    SKELETON_BULLET_SPEED = 18
     GOLFER_BULLET_SPEED = 12
     GOLFER_BULLET_ARC = -7
     GOLFER_BULLET_SPRITE = "./assets/art/golfer_bullet.png"

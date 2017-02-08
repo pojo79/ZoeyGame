@@ -124,7 +124,7 @@ class Skeleton(EnemyBase):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.bullets = pygame.sprite.Group()
+        self.bullets = SpriteBase.BulletBaseGroup()
         self.bullet_last_shot = 0
 
     def world_shift(self, xdiff):
@@ -136,8 +136,8 @@ class Skeleton(EnemyBase):
         if ticks - self.bullet_last_shot > Enemy.SKELETON_SHOOT_RATE:
             self.bullet_last_shot = ticks
             if self.pos.x < player_pos.x:
-                self.bullets.add(AnimatedBullet(Enemy.SKELETON_BULLET_SPEED, Enemy.SKELETON_BULLET_ARC, self.rect.midleft, self.bullet_image,
+                self.bullets.add(AnimatedBullet(Enemy.SKELETON_BULLET_SPEED, Enemy.SKELETON_BULLET_ARC, self.rect.topleft, self.bullet_image,
                 Enemy.SKELETON_SPRITE_BULLET_WIDTH, Enemy.SKELETON_SPRITE_BULLET_HEIGHT, Enemy.SKELETON_SPRITE_BULLET_LENGTH))
             if self.pos.x > player_pos.x:
-                self.bullets.add(AnimatedBullet(-Enemy.SKELETON_BULLET_SPEED, Enemy.SKELETON_BULLET_ARC, self.rect.midright, self.bullet_image,
+                self.bullets.add(AnimatedBullet(-Enemy.SKELETON_BULLET_SPEED, Enemy.SKELETON_BULLET_ARC, self.rect.topright, self.bullet_image,
                 Enemy.SKELETON_SPRITE_BULLET_WIDTH, Enemy.SKELETON_SPRITE_BULLET_HEIGHT, Enemy.SKELETON_SPRITE_BULLET_LENGTH))
