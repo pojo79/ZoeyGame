@@ -1,37 +1,35 @@
 import pygame
 import math
 from GameSetting import *
-from GameObjects import projectile
+from GameObjects import Projectile
+import SpriteBase
 
 vec = pygame.math.Vector2
 
-class PlayerSprite(pygame.sprite.Sprite):
+class PlayerSprite(SpriteBase.GameSprite):
 
     def __init__(self, start_coord):
-        pygame.sprite.Sprite.__init__(self)
-        self.MOVE_SPEED = Move.PLAYER_MOVE
+        super().__init__(start_coord)
+        self.move_speed = Move.PLAYER_MOVE
         self.space_pushed = False
         self.is_dead = False
-        self.image_right = pygame.image.load(
-            "./assets/art/zoeyPlaceHolder.png")
+        self.nerf_dart_image = pygame.image.load(Game.NERF_DART_IMAGE).convert()
+        self.image_right = pygame.image.load(Game.PLAYER_SPRITE_SHEET).convert_alpha()
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
         self.rect = self.image.get_rect()
         self.direction = Move.STOP
         self.facing = Move.RIGHT
         self.rect.inflate_ip(-20, 0)
-        self.vel = vec(0, 0)
-        self.pos = vec(start_coord[0], start_coord[1])
-        self.acc = vec(0, 0)
         self.jump_buffer = None
         self.duck = False
         self.run = False
         self.onGround = False
-        self.ammo = 5
+        self.gun = None
         self.max_bullets = 2
         self.rect.move_ip(self.pos)
         self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
-        self.bullets = pygame.sprite.Group()
+        self.bullets = SpriteBase.BulletBaseGroup()
 
     def get_bullets(self):
         return self.bullets
@@ -59,41 +57,38 @@ class PlayerSprite(pygame.sprite.Sprite):
                 self.onGround = False
                 self.acc.y = Move.PLAYER_JUMP
                 self.jump_buffer = None
-    
-    ''' add a jumper to the buffer with the current time of button press
+
+    """ add a jumper to the buffer with the current time of button press
     This will make jumping more responsive since you can press button slightly before hitting the ground and still
-    have jump register '''
+    have jump register """
     def add_jump_to_buffer(self):
         self.jump_buffer = pygame.time.get_ticks()
 
     def set_move_speed(self):
-        if self.MOVE_SPEED == Move.PLAYER_MOVE:
+        if self.move_speed == Move.PLAYER_MOVE:
             if self.run and self.onGround:
-                self.MOVE_SPEED = Move.PLAYER_RUN
-        if self.MOVE_SPEED == Move.PLAYER_RUN:
+                self.move_speed = Move.PLAYER_RUN
+        if self.move_speed == Move.PLAYER_RUN:
             if not self.run and self.onGround:
-                self.MOVE_SPEED = Move.PLAYER_MOVE
+                self.move_speed = Move.PLAYER_MOVE
 
     def update(self, friction, gravity, floor):
-        print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
         self.set_move_speed()
         if self.direction == Move.LEFT:
-            self.acc.x = -self.MOVE_SPEED
+            self.acc.x = -self.move_speed
             self.image = self.image_left
         if self.direction == Move.RIGHT:
-            self.acc.x = self.MOVE_SPEED
+            self.acc.x = self.move_speed
             self.image = self.image_right
         self.jump()
         
         self.acc.x += self.vel.x * friction
-        if math.fabs(self.acc.x) <= Move.ZERO_THRESHOLD:
+        if math.fabs(self.acc.x) <= Move.ZERO_THRESHOLD and self.onGround and self.direction == Move.STOP:
             self.acc.x = 0
             self.vel.x = 0
         
-        self.vel += self.acc
-        self.pos += self.vel + .5 * self.acc
-        self.rect.x = self.pos.x
-        self.rect.y = self.pos.y
+        self.update_position(gravity)
+        #print("vel = "+str(self.vel) + "acc = "+str(self.acc) + "pos = "+str(self.pos))
 
         if self.pos.y > floor:
             self.is_dead = True
@@ -120,18 +115,27 @@ class PlayerSprite(pygame.sprite.Sprite):
         else:
             self.is_dead = True
             return False
+    
+    def set_gun(self, gun):
+        self.gun = gun
+    
+    def get_ammo(self):
+        ammo = 0
+        if not self.gun == None:
+            ammo = self.gun.get_ammo_amount()
+        return ammo
 
     def shoot(self):
         #TODO move image loading to player init, save copy of image to use
-        if len(self.bullets.sprites()) < self.max_bullets and self.ammo > 0:
-            nerf_image = pygame.image.load("./assets/art/nerf_dart.png").convert()
-            self.ammo -=1
-            if self.facing == Move.LEFT:   
-                self.bullets.add(projectile(-Move.PLAYER_BULLET_SPEED, Move.PLAYER_BULLET_ARC,self.rect.midleft,nerf_image))
+        if not self.gun == None and len(self.bullets.sprites()) < self.max_bullets and self.gun.get_ammo_amount() > 0:
+            self.gun.set_ammo_amount(self.gun.get_ammo_amount() - 1)
+            if self.facing == Move.LEFT:
+                self.bullets.add(Projectile(-self.gun.get_x_shoot_speed(),
+                                            self.gun.get_y_shoot_speed(), self.rect.midleft, self.nerf_dart_image))
             if self.facing == Move.RIGHT:
-                self.bullets.add(projectile(Move.PLAYER_BULLET_SPEED, Move.PLAYER_BULLET_ARC,self.rect.midright, nerf_image))
-    
+                self.bullets.add(Projectile(self.gun.get_x_shoot_speed(
+                ), self.gun.get_y_shoot_speed(), self.rect.midright, self.nerf_dart_image))
+
     def add_ammo(self, amount):
-        print(self.ammo)
-        self.ammo += amount
-        print(self.ammo)
+        if not self.gun == None:
+            self.gun.set_ammo_amount(self.gun.get_ammo_amount() + 1)
