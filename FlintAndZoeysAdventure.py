@@ -6,12 +6,13 @@ import numpy
 import GameSetting
 from PlayerSprite import *
 from EnemySprites import *
+from ScreenUI import *
 from GameObjects import Obstacle
 import GameObjects
 
 # initiate pygame
 pygame.init()
-game_display = pygame.display.set_mode((1024, 768))
+game_display = pygame.display.set_mode((GameSetting.Game.WINDOW_WIDTH, GameSetting.Game.WINDOW_HEIGHT))
 pygame.display.set_caption("Flint and Zoeys Adventure")
 
 if pygame.joystick.get_count() > 0:
@@ -30,10 +31,11 @@ class Level(object):
         self.level_friction = friction
         self.level_gravity = gravity
         self.spawn = (0, 0)
-        self.ground = pygame.sprite.Group()
-        self.enemies = pygame.sprite.Group()
-        self.powerups = pygame.sprite.Group()
-        self.ammo = pygame.sprite.Group()
+        self.ground = SpriteBase.OnScreenGroup()
+        self.enemies = SpriteBase.OnScreenGroup()
+        self.powerups = SpriteBase.OnScreenGroup()
+        self.ammo = SpriteBase.OnScreenGroup()
+        self.checkpoints = SpriteBase.OnScreenGroup()
         self.goal = 0
 
     def render(self, surface):
@@ -59,7 +61,7 @@ class FlintAndZoeyGame(object):
         self.world_x = 0
         self.rightBounds = 0
         self.leftBounds = 0
-        self.player_lives = 3
+        self.player_lives = GameSetting.Game.PLAYER_START_LIVES
         self.death_time = None
         self.event_handler = None #set to start screen handler when start screen created
         self.death_scene = pygame.image.load("./assets/art/death_scene.png")
@@ -67,9 +69,10 @@ class FlintAndZoeyGame(object):
         self.allGameObjects = pygame.sprite.Group()
         self.loadLevel()
         self.load_music()
+        self.spawn = self.level.spawn
         self.splat = pygame.mixer.Sound("./assets/sound/splat.wav")
         self.game_display = game_display
-        self.player = PlayerSprite(self.level.spawn)
+        self.player = PlayerSprite(self.spawn)
         self.gameLoop()
 
     def load_music(self):
@@ -92,17 +95,23 @@ class FlintAndZoeyGame(object):
                 self.level.goal = Obstacle(
                     tile_object.x, tile_object.y, tile_object.width, tile_object.height)
                 self.allGameObjects.add(self.level.goal)
+            if tile_object.name == "checkpoint":
+                self.level.checkpoints.add(Obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
             if tile_object.name == "snake":
                 travel = tile_object.properties['travel']
                 self.level.enemies.add(
-                    snake(tile_object.x, tile_object.y, float(travel)))
+                    Zombie(tile_object.x, tile_object.y, float(travel)))
+            if tile_object.name == "skeleton":
+                self.level.enemies.add(
+                    Skeleton(tile_object.x, tile_object.y))
             if tile_object.name == "eye":
-                self.level.enemies.add(eye(tile_object.x, tile_object.y))
+                self.level.enemies.add(Golfer(tile_object.x, tile_object.y))
 
             self.allGameObjects.add(self.level.ground)
             self.allGameObjects.add(self.level.enemies)
             self.allGameObjects.add(self.level.ammo)
             self.allGameObjects.add(self.level.powerups)
+            self.allGameObjects.add(self.level.checkpoints)
 
         self.rightBounds = 450
         self.leftBounds = self.rightBounds - 100
@@ -116,7 +125,6 @@ class FlintAndZoeyGame(object):
                 if(self.player.rect.right > game_display.get_width()):
                     self.player.pos.x = game_display.get_width() - self.player.rect.width
             else:
-                print('in else '+ str(self.player.pos.x) + ' right bounds ' + str(self.rightBounds))
                 xdiff = math.floor(self.rightBounds - self.player.pos.x)
                 self.player.pos.x = self.rightBounds
 
@@ -131,39 +139,41 @@ class FlintAndZoeyGame(object):
 
         self.world_x += xdiff
         for item in self.allGameObjects:
-            item.rect.x += xdiff
+            item.world_shift(xdiff)
 
     def gameLoop(self):
         pygame.mixer.music.play()
         pygame.mixer.music.set_volume(Game.MUSIC_VOLUME)
         handler = GameEventHandlers.GamePlayEventHandler(self, self.player)
+        gameOverlay = ScreenOverlay()
+
         while not self.gameOver:
+            handler.handleEvent()
+            self. shiftAll()
 
             self.game_display.blit(self.tileSurface, (self.world_x, 0))
+            
             bullets = self.player.get_bullets()
-
             self.do_player_bullet_collisions(bullets)
-            
             self.do_player_collisions()
-
+            self.do_enemy_bullet_loop()
             
-            handler.handleEvent()
-            bullets.update(self.level.level_gravity, self.game_display.get_width(), self.game_display.get_height())
+            bullets.update(self.level.level_gravity, self.level.width, self.level.height)
             self.player.update(self.level.level_friction,
                                self.level.level_gravity, self.tileSurface.get_height())
-            self.level.enemies.update(
-                self.level.level_friction, self.level.level_gravity)
+            self.level.enemies.update(self.game_display.get_width(), self.game_display.get_height(),
+                self.level.level_friction, self.level.level_gravity, self.player.pos)
 
             # draw platform hitbox
             # self.level.ground.draw(self.game_display)
             # self.allGameObjects.draw(self.game_display)
-            self. shiftAll()
 
             # draw items
             bullets.draw(self.game_display)
             self.level.powerups.draw(self.game_display)
             self.level.enemies.draw(self.game_display)
             self.player.draw(self.game_display)
+            gameOverlay.draw(self.game_display, self.player_lives, self.player.get_ammo())
             pygame.display.update()
 
             if self.player.is_dead:
@@ -176,10 +186,30 @@ class FlintAndZoeyGame(object):
         pygame.mixer.music.stop()
         self.do_game_over()
     
+    def do_enemy_bullet_loop(self):
+
+        for enemy in self.level.enemies:
+            enemybullets = enemy.get_bullets()
+            if enemybullets:
+                enemybullets.update(
+                self.level.level_gravity, self.level.width, self.level.height)
+                self.do_enemy_bullet_collision(enemybullets)
+                enemybullets.draw(self.game_display)
+                self.allGameObjects.add(enemybullets)
+            
+    def do_enemy_bullet_collision(self, bullets):
+        playerHit = pygame.sprite.spritecollide(self.player, bullets, False)
+        if playerHit:
+            self.player.is_dead = True
+
     def do_player_collisions(self):
         if pygame.sprite.collide_rect(self.level.goal, self.player):
             print("yea, you win")
             self.gameOver = True
+        
+        checkpoint = pygame.sprite.spritecollide(self.player, self.level.checkpoints, True)
+        if checkpoint:
+            self.spawn = checkpoint[0].get_map_location()
 
         hits = pygame.sprite.spritecollide(self.player, self.level.enemies, False)
         if hits:
@@ -249,7 +279,7 @@ class FlintAndZoeyGame(object):
         else:
             self.world_x = 0
             self.loadLevel()
-            self.player = PlayerSprite(self.level.spawn)
+            self.player = PlayerSprite(self.spawn)
             self.player_lives -= 1
 
 
