@@ -21,7 +21,7 @@ class EnemyBase(SpriteBase.GameSprite):
         return self.points
 
 class Zombie(EnemyBase):
-    points = 300
+    points = Enemy.ZOMBIE_POINT_VALUE
 
     def __init__(self, x, y, travel=40):
         super().__init__((x, y))
@@ -96,6 +96,7 @@ class Zombie(EnemyBase):
 
 
 class Golfer(EnemyBase):
+    points = Enemy.GOLFER_POINT_VALUE
 
     def __init__(self, x, y):
         super().__init__((x,y))
@@ -122,29 +123,69 @@ class Golfer(EnemyBase):
                 self.bullets.add(Projectile(-Enemy.GOLFER_BULLET_SPEED, Enemy.GOLFER_BULLET_ARC, self.rect.midbottom, self.bullet_image))
 
 class Skeleton(EnemyBase):
-    points = 400
+    points = Enemy.SKELETON_POINT_VALUE
+    UPDATE_FRAME_ON = Enemy.SKELETON_ANIMATE_SPEED
 
     def __init__(self, x, y):
         super().__init__((x,y))
-        self.image = pygame.image.load(Enemy.SKELETON_SPRITE_SHEET).convert_alpha()
+        self.sprite_sheet = SpriteBase.Spritesheet(Enemy.SKELETON_SPRITE_SHEET)
+        self.frames_left = []
+        self.frames_right = []
+        self.load_frames()
+        self.image_set = self.frames_right
+        self.image = self.image_set[1]
         self.bullet_image = SpriteBase.Spritesheet(Enemy.SKELETON_BULLET_SPRITE)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.bullets = SpriteBase.BulletBaseGroup()
         self.bullet_last_shot = 0
+        self.current_frame = 1
+        self.last_frame = 0
+        self.facing = "RIGHT"
+        
+
+    def load_frames(self):
+        self.frames_right = [self.sprite_sheet.get_image_row_column(Enemy.SKELETON_SPRITE_WIDTH, Enemy.SKELETON_SPRITE_HEIGHT, 0, 0),
+                                    self.sprite_sheet.get_image_row_column(Enemy.SKELETON_SPRITE_WIDTH, Enemy.SKELETON_SPRITE_HEIGHT, 1, 0)]
+        for image in self.frames_right:
+            self.frames_left.append(pygame.transform.flip(image, True, False))        
 
     def world_shift(self, xdiff):
         self.pos.x += xdiff    
 
     def update(self, friction, gravity, player_pos):
+        force = False
+        throw = False
         ticks = pygame.time.get_ticks()
         self.update_position(gravity)
         if ticks - self.bullet_last_shot > Enemy.SKELETON_SHOOT_RATE:
+            throw = True
             self.bullet_last_shot = ticks
             if self.pos.x < player_pos.x:
                 self.bullets.add(AnimatedBullet(Enemy.SKELETON_BULLET_SPEED, Enemy.SKELETON_BULLET_ARC, self.rect.topleft, self.bullet_image,
                 Enemy.SKELETON_SPRITE_BULLET_WIDTH, Enemy.SKELETON_SPRITE_BULLET_HEIGHT, Enemy.SKELETON_SPRITE_BULLET_LENGTH))
+                if self.facing == "RIGHT":
+                    force = True
+                    self.current_frame = 0
+                self.image_set = self.frames_left
+                self.facing = "LEFT"
             if self.pos.x > player_pos.x:
                 self.bullets.add(AnimatedBullet(-Enemy.SKELETON_BULLET_SPEED, Enemy.SKELETON_BULLET_ARC, self.rect.topright, self.bullet_image,
                 Enemy.SKELETON_SPRITE_BULLET_WIDTH, Enemy.SKELETON_SPRITE_BULLET_HEIGHT, Enemy.SKELETON_SPRITE_BULLET_LENGTH))
+                if self.facing == "LEFT":
+                    force = True
+                    self.current_frame = 0
+                self.image_set = self.frames_right
+                self.facing = "RIGHT"
+        self.animate(ticks, force, throw)
+
+    def animate(self, ticks, force, throw):
+        now = pygame.time.get_ticks()
+      
+        if (now - self.last_frame >= self.UPDATE_FRAME_ON[self.current_frame]) or (force):
+            self.last_frame = now
+            self.current_frame += 1
+            if self.current_frame >= len(self.frames_left):
+                self.current_frame = 0
+            self.image = self.image_set[self.current_frame]

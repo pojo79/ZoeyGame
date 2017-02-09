@@ -13,7 +13,6 @@ class ScreenOverlay(pygame.sprite.Sprite):
     def get_number_images(self):
         nums = []
         for num in range(10):
-            print(num)
             nums.append(self.number_sprite_sheet.get_image_row_column(GameSetting.Game.NUMBERS_SPRITE_WIDTH, GameSetting.Game.NUMBERS_SPRITE_HEIGHT,num,0))
         return nums
     

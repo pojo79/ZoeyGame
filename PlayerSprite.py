@@ -13,7 +13,8 @@ class PlayerSprite(SpriteBase.GameSprite):
         self.move_speed = Move.PLAYER_MOVE
         self.space_pushed = False
         self.is_dead = False
-        self.nerf_dart_image = pygame.image.load(Game.NERF_DART_IMAGE).convert()
+        self.nerf_dart_image_right = pygame.image.load(Game.NERF_DART_IMAGE).convert()
+        self.nerf_dart_image_left = pygame.transform.flip(self.nerf_dart_image_right, True, False)
         self.image_right = pygame.image.load(Game.PLAYER_SPRITE_SHEET).convert_alpha()
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
@@ -125,15 +126,16 @@ class PlayerSprite(SpriteBase.GameSprite):
         return ammo
 
     def shoot(self):
+        print(self.facing)
         #TODO move image loading to player init, save copy of image to use
         if not self.gun == None and self.gun.get_ammo_amount() > 0:
             self.gun.set_ammo_amount(self.gun.get_ammo_amount() - 1)
             if self.facing == Move.LEFT:
                 self.bullets.add(Projectile(-self.gun.get_x_shoot_speed(),
-                                            self.gun.get_y_shoot_speed(), self.rect.midleft, self.nerf_dart_image))
+                                            self.gun.get_y_shoot_speed(), (self.rect.x-self.nerf_dart_image_left.get_rect().width,self.rect.y+self.rect.height/2), self.nerf_dart_image_left))
             if self.facing == Move.RIGHT:
                 self.bullets.add(Projectile(self.gun.get_x_shoot_speed(
-                ), self.gun.get_y_shoot_speed(), self.rect.midright, self.nerf_dart_image))
+                ), self.gun.get_y_shoot_speed(), self.rect.midright, self.nerf_dart_image_right))
 
     def add_ammo(self, amount):
         if not self.gun == None:

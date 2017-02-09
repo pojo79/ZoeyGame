@@ -47,12 +47,16 @@ class Game():
     PLAYER_START_LIVES = 2
 
 class Enemy():
+    ZOMBIE_POINT_VALUE = 200
     ZOMBIE_WALK_SPEED = .08
     ZOMBIE_SPRITE_WIDTH = 52
     ZOMBIE_SPRITE_HEIGHT = 87
     ZOMBIE_SPRITE_SHEET = "./assets/art/zombie_sprite_sheet.png"
-    GOLFER_SPRITE_SHEET = "./assets/art/golfer.png"
-    SKELETON_SPRITE_SHEET = "./assets/art/skeleton.png"
+    SKELETON_POINT_VALUE = 400
+    SKELETON_SPRITE_SHEET = "./assets/art/skeleton_sprite_sheet.png"
+    SKELETON_SPRITE_WIDTH = 48
+    SKELETON_SPRITE_HEIGHT = 96
+    SKELETON_ANIMATE_SPEED = [1250,1250]
     SKELETON_SPRITE_BULLET_WIDTH = 20
     SKELETON_SPRITE_BULLET_HEIGHT = 20
     SKELETON_SPRITE_BULLET_LENGTH = 2
@@ -60,7 +64,9 @@ class Enemy():
     SKELETON_SHOOT_RATE = 2500
     SKELETON_BULLET_ARC = -4
     SKELETON_BULLET_SPEED = 18
+    GOLFER_POINT_VALUE = 300
     GOLFER_BULLET_SPEED = 12
     GOLFER_BULLET_ARC = -7
+    GOLFER_SPRITE_SHEET = "./assets/art/golfer.png"
     GOLFER_BULLET_SPRITE = "./assets/art/golfer_bullet.png"
     GOLFER_SHOOT_RATE = 2000
