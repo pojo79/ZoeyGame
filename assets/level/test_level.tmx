@@ -29,17 +29,17 @@
    <image width="320" height="320" source="TileSet1.png"/>
   </tile>
  </tileset>
- <tileset firstgid="268" name="TileSet1" tilewidth="32" tileheight="32" tilecount="400" columns="10">
-  <image source="TileSet1.png" width="320" height="320"/>
+ <tileset firstgid="268" name="TileSet1" tilewidth="32" tileheight="32" tilecount="225" columns="15">
+  <image source="TileSet1.png" width="480" height="480"/>
  </tileset>
  <layer name="Tile Layer 3" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztmdEOwjAIReefqXtT9+bm//+JNXEJabYAHVCM9ya8zRU4QLs6DNCv6nnq7QEEQVCb5jK/lmIvzDEIgoy1zpcFc0asOmfUrsVG5FCss3Ou7uX9k2INa39a9m+tD5dv3XEmqctbMh7e/nj48InxITBJHuq1Z0EtaeonO4+t/onkUeeyJX7Nb6S9bGlH96u9+LhYxgYe9VrePKS1Y2maftTEx8UyBfKgZyjN3ggeOh4R56tsPLg7X5oj+mym/mgVjWE9K/TmwSnjvLLqmwz9of0PJCMPq77JwEOrSB7ceXfr7uPInREXAz3//yOPnvtH1v6QfpOBRwwPaU7AAzysBR7gAR778uDxBgBR5mk=
+   eJztmWEOwiAMhecxvYE3UHeA6Q7g9LiyRBJCwLasYGXvJf250fZrC2PDAP2rHodfewBBEFSmxc2vp7MX5hgEQcry8yU06LtSOfN2dTYih2ydK+fq5t4/C9bQ9qdk/5b6cPnUHWWcupyM8ajtTw0f1hjvDOPkIV57YdSSpH6s80j1T0secS5L4pc8w+1lTdu6X+Xio2IZC3jEa9Xmwa0dTZP0oyQ+Kpa5IY/wDCXZG8FDxqPF+coaD+rON8xRmB9L/VGqMIZ1/lIzdu/9kVv7qMTJQn9I/4FY5HHqiIdULXlQ593U3ceWu2kqBn+G1JxjUh7cb4De9g+r/cHNCXiAh7bAAzzAIy/w6J/HG49nmic=
   </data>
  </layer>
  <layer name="Tile Layer 2" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt2EEKgCAQhWHLjScq2rVuX93/JinoJgqkSKfx/8BlzNDTMTIGAAAAT7mudgcA3ugzz/DEWQd+K/euPs+Du+dKzIPB1xgv6oSe7PflUZjlLkJlud9D2rX2GlLurm4biFafxxbX3tpmVKz0P6NQjpmOZGYviLKQhyjkIQt5yEIe0OQAEsIENA==
+   eJztmEtOwzAQhp1kkxUtC5b0Bpyg7SZrImCJqIB11eNUaU9QXmueeygXaE8A9+CPFCuRlcSmqWMnmU/6lSiyNS/PyC1jBEGsHMbuoHvoAXqEnhzTXnWXZ+T+BXqF3qB36KNiPYZUz0p8In9f0Br6bmAu29jjG/i/bUAMB/CxB/Whw8RfHT1uEh++/0C/0NjyOI7h3yDHx7p7/Aw2zkt0UcGHSLK3rnmgauekwLZqj88tP3MyZPOg7Ezk9VuAb7Oc70V2jiA3s35U0Me8x9sMj3vXeXCKtaFQu7JebvrdQjfZfPJ58J/ZeOWk8+EazxvoVrK/KXcLGXn3fl8xLldYx/fF+Zwk73weTDXnSpw7gZP65Ok1TRjAUzxPYQt6lLATcf51la6lgdfdN+tGIfFvu6WBopj6DzGOd5HIRNyEHlTvofsiNkcz3Q4iC/r5ks4CQRAEQRAd5w8WU0/O
   </data>
  </layer>
  <objectgroup name="level layout">
@@ -47,7 +47,7 @@
   <object id="6" name="ground" x="352" y="288" width="94" height="15"/>
   <object id="10" name="ground" x="608" y="352" width="94" height="15"/>
   <object id="11" name="ground" x="511" y="480" width="31" height="16"/>
-  <object id="12" name="ground" x="0" y="384" width="285" height="16"/>
+  <object id="12" name="ground" x="0" y="384" width="272" height="16"/>
   <object id="13" name="ground" x="959" y="384" width="285" height="12"/>
   <object id="14" name="ground" x="1152" y="289" width="350" height="12"/>
   <object id="15" name="ground" x="768" y="288" width="31" height="16"/>
