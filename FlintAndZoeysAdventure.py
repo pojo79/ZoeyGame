@@ -39,6 +39,7 @@ class FlintAndZoeyGame(object):
         self.game_display = game_display
         self.player = PlayerSprite(self.spawn)
         self.gameLoop()
+        SoundManager.load_sounds()
 
     def load_music(self):
         pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")

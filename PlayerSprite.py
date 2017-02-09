@@ -26,7 +26,6 @@ class PlayerSprite(SpriteBase.GameSprite):
         self.run = False
         self.onGround = False
         self.gun = None
-        self.max_bullets = 2
         self.rect.move_ip(self.pos)
         self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
         self.bullets = SpriteBase.BulletBaseGroup()
@@ -127,7 +126,7 @@ class PlayerSprite(SpriteBase.GameSprite):
 
     def shoot(self):
         #TODO move image loading to player init, save copy of image to use
-        if not self.gun == None and len(self.bullets.sprites()) < self.max_bullets and self.gun.get_ammo_amount() > 0:
+        if not self.gun == None and self.gun.get_ammo_amount() > 0:
             self.gun.set_ammo_amount(self.gun.get_ammo_amount() - 1)
             if self.facing == Move.LEFT:
                 self.bullets.add(Projectile(-self.gun.get_x_shoot_speed(),
