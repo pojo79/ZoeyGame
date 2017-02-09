@@ -21,13 +21,13 @@ class ScreenOverlay(pygame.sprite.Sprite):
         num_string = str(number)
         position = 0
         for num in num_string:
-            print('in draw_numbers drawing num '+ num + ' at ' +str(start_x+position*width))
             screen.blit(self.numbers[int(num_string[position])],(start_x+position*width, start_y))
             position += 1
             
 
-    def draw(self, screen, lives, ammo):
+    def draw(self, screen, lives, ammo, points):
         screen.blit(self.image, self.image.get_rect())
         self.draw_numbers(screen,lives,GameSetting.Game.OVERLAY_LIVES_POS, self.image.get_rect().y, GameSetting.Game.NUMBERS_SPRITE_WIDTH)
         self.draw_numbers(screen,ammo,GameSetting.Game.OVERLAY_AMMO_POS, self.image.get_rect().y, GameSetting.Game.NUMBERS_SPRITE_WIDTH)
+        self.draw_numbers(screen,points,GameSetting.Game.OVERLAY_SCORE_POS, self.image.get_rect().y, GameSetting.Game.NUMBERS_SPRITE_WIDTH)
         

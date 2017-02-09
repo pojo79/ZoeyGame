@@ -8,6 +8,8 @@ vec = pygame.math.Vector2
 
 
 class EnemyBase(SpriteBase.GameSprite):
+    points = 200
+
     def __init__(self, start_coord):
         super().__init__(start_coord)
         self.bullets = None
@@ -15,7 +17,11 @@ class EnemyBase(SpriteBase.GameSprite):
     def get_bullets(self):
         return self.bullets
 
+    def get_point_worth(self):
+        return self.points
+
 class Zombie(EnemyBase):
+    points = 300
 
     def __init__(self, x, y, travel=40):
         super().__init__((x, y))
@@ -116,7 +122,8 @@ class Golfer(EnemyBase):
                 self.bullets.add(Projectile(-Enemy.GOLFER_BULLET_SPEED, Enemy.GOLFER_BULLET_ARC, self.rect.midbottom, self.bullet_image))
 
 class Skeleton(EnemyBase):
-    
+    points = 400
+
     def __init__(self, x, y):
         super().__init__((x,y))
         self.image = pygame.image.load(Enemy.SKELETON_SPRITE_SHEET).convert_alpha()

@@ -38,8 +38,8 @@ class FlintAndZoeyGame(object):
         self.splat = pygame.mixer.Sound("./assets/sound/splat.wav")
         self.game_display = game_display
         self.player = PlayerSprite(self.spawn)
+        self.points = 0
         self.gameLoop()
-        SoundManager.load_sounds()
 
     def load_music(self):
         pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")
@@ -139,7 +139,7 @@ class FlintAndZoeyGame(object):
             self.level.powerups.draw(self.game_display)
             self.level.enemies.draw(self.game_display)
             self.player.draw(self.game_display)
-            gameOverlay.draw(self.game_display, self.player_lives, self.player.get_ammo())
+            gameOverlay.draw(self.game_display, self.player_lives, self.player.get_ammo(), self.points)
             pygame.display.update()
 
             if self.player.is_dead:
@@ -183,6 +183,7 @@ class FlintAndZoeyGame(object):
                 if self.player.kill_enemy(hit, self.level.level_gravity):
                     self.splat.play()
                     hit.kill()
+                    self.points += hit.get_point_worth()
 
         collide = pygame.sprite.spritecollide(self.player, self.level.ground, False)
         if collide:
@@ -198,6 +199,7 @@ class FlintAndZoeyGame(object):
             capped = pygame.sprite.groupcollide(bullets, self.level.enemies, False, True)
             if capped:
                 for dart in capped:
+                    self.points += math.floor(capped[dart][0].get_point_worth()/2)
                     if dart.velocity.x > 0:
                         dart.acceleration = vec(0, 0)
                         dart.velocity = vec(-GameSetting.Game.DART_BOUNCE, self.level.level_gravity)

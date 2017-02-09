@@ -31,7 +31,7 @@ class Game():
     OVERLAY_IMAGE = "./assets/art/screen_overlay.png"
     OVERLAY_LIVES_POS = 100
     OVERLAY_AMMO_POS = 295
-    OVERLAY_SCORE_POS = 800
+    OVERLAY_SCORE_POS = 820
     DART_BOUNCE = 2
     MUSIC_VOLUME = .05
     NERF_PISTOL_SPEED = 12
