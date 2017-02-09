@@ -29,8 +29,8 @@ class Game():
     DEATH_SCENE_OVERLAY = "./assets/art/death_scene.png"
     GAME_OVER_OVERLAY = "./assets/art/game_over.png"
     OVERLAY_IMAGE = "./assets/art/screen_overlay.png"
-    OVERLAY_LIVES_POS = 110
-    OVERLAY_AMMO_POS = 310
+    OVERLAY_LIVES_POS = 100
+    OVERLAY_AMMO_POS = 295
     OVERLAY_SCORE_POS = 800
     DART_BOUNCE = 2
     MUSIC_VOLUME = .05
@@ -44,7 +44,7 @@ class Game():
     PLAYER_SPRITE_SHEET = "./assets/art/zoeyPlaceHolder.png"
     NERF_PISTOL_IMAGE = "./assets/art/nerf_pistol.png"
     NERF_RIFLE_IMAGE = "./assets/art/nerf_pistol.png"
-    PLAYER_START_LIVES = 9
+    PLAYER_START_LIVES = 2
 
 class Enemy():
     ZOMBIE_WALK_SPEED = .08
