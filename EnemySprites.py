@@ -25,7 +25,7 @@ class Zombie(EnemyBase):
 
     def __init__(self, x, y, travel=40):
         super().__init__((x, y))
-        self.UPDATE_FRAME_ON = 150
+        self.UPDATE_FRAME_ON = 200
         self.current_frame = 0
         self.last_frame = 0
         self.spritesheet = SpriteBase.Spritesheet(Enemy.ZOMBIE_SPRITE_SHEET)
@@ -42,15 +42,10 @@ class Zombie(EnemyBase):
 
     def load_images(self):
         self.walking_frames_left = [self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 2, 0),
-                                    self.spritesheet.get_image_row_column(
-                                        Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 1, 0),
-                                    self.spritesheet.get_image_row_column(
-                                        Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 0, 0),
-                                    self.spritesheet.get_image_row_column(
-                                        Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 2, 0),
-                                    self.spritesheet.get_image_row_column(
-            Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 3, 0),
-            self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 4, 0)]
+                                    self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 3, 0),
+                                    self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 1, 0),
+                                    self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 2, 0),
+                                    self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 0, 0)]
 
         self.walking_frames_right = []
         for frame in self.walking_frames_left:

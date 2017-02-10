@@ -126,7 +126,6 @@ class PlayerSprite(SpriteBase.GameSprite):
         return ammo
 
     def shoot(self):
-        print(self.facing)
         #TODO move image loading to player init, save copy of image to use
         if not self.gun == None and self.gun.get_ammo_amount() > 0:
             self.gun.set_ammo_amount(self.gun.get_ammo_amount() - 1)

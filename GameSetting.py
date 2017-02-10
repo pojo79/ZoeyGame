@@ -49,8 +49,8 @@ class Game():
 class Enemy():
     ZOMBIE_POINT_VALUE = 200
     ZOMBIE_WALK_SPEED = .08
-    ZOMBIE_SPRITE_WIDTH = 52
-    ZOMBIE_SPRITE_HEIGHT = 87
+    ZOMBIE_SPRITE_WIDTH = 59
+    ZOMBIE_SPRITE_HEIGHT = 96
     ZOMBIE_SPRITE_SHEET = "./assets/art/zombie_sprite_sheet.png"
     SKELETON_POINT_VALUE = 400
     SKELETON_SPRITE_SHEET = "./assets/art/skeleton_sprite_sheet.png"

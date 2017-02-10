@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="57">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="58">
  <tileset firstgid="1" name="goodly-2x" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="../art/goodly-2x.png" width="512" height="512"/>
  </tileset>
- <tileset firstgid="257" name="Mushroom" tilewidth="320" tileheight="320" tilecount="8" columns="0">
+ <tileset firstgid="257" name="Mushroom" tilewidth="480" tileheight="480" tilecount="8" columns="0">
   <tile id="1">
    <image width="32" height="32" source="../art/mushroom_small.png"/>
   </tile>
@@ -26,7 +26,7 @@
    <image width="32" height="32" source="../art/dirt.png"/>
   </tile>
   <tile id="10">
-   <image width="320" height="320" source="TileSet1.png"/>
+   <image width="480" height="480" source="TileSet1.png"/>
   </tile>
  </tileset>
  <tileset firstgid="268" name="TileSet1" tilewidth="32" tileheight="32" tilecount="225" columns="15">
@@ -34,12 +34,12 @@
  </tileset>
  <layer name="Tile Layer 3" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztmWEOwiAMhecxvYE3UHeA6Q7g9LiyRBJCwLasYGXvJf250fZrC2PDAP2rHodfewBBEFSmxc2vp7MX5hgEQcry8yU06LtSOfN2dTYih2ydK+fq5t4/C9bQ9qdk/5b6cPnUHWWcupyM8ajtTw0f1hjvDOPkIV57YdSSpH6s80j1T0secS5L4pc8w+1lTdu6X+Xio2IZC3jEa9Xmwa0dTZP0oyQ+Kpa5IY/wDCXZG8FDxqPF+coaD+rON8xRmB9L/VGqMIZ1/lIzdu/9kVv7qMTJQn9I/4FY5HHqiIdULXlQ593U3ceWu2kqBn+G1JxjUh7cb4De9g+r/cHNCXiAh7bAAzzAIy/w6J/HG49nmic=
+   eJztmdsNwjAMRcuYbMAGQAcAOgCl4xIkKkVRih91jFvdI/kTEvs4D0LXga3yPPx7BgAAoGNM+9crxYR9DABgzLy/5AF+U6vZHNcUPWrI5ty4Vvf0/YNgDOv5aM5v6Rwu376jgtOXt2A+Ws+nxRw+OT4YwalDOfbI6CVJ/0T3UVs/nj7KWmryl3yGu5YtY+15tZQflUuv8FGO1doHt3csQ7IeJflRuQyOPvI7lORshA+ZD4/7VTQf1JtvXqO8PpHWh5aIPigi7ldHI08RfEj/A4no47QjH1I8fVD33drbx5q36S344P4GwPnh44NbE/iAD2vgAz7gYxn42L+PN+wEmnI=
   </data>
  </layer>
  <layer name="Tile Layer 2" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztmEtOwzAQhp1kkxUtC5b0Bpyg7SZrImCJqIB11eNUaU9QXmueeygXaE8A9+CPFCuRlcSmqWMnmU/6lSiyNS/PyC1jBEGsHMbuoHvoAXqEnhzTXnWXZ+T+BXqF3qB36KNiPYZUz0p8In9f0Br6bmAu29jjG/i/bUAMB/CxB/Whw8RfHT1uEh++/0C/0NjyOI7h3yDHx7p7/Aw2zkt0UcGHSLK3rnmgauekwLZqj88tP3MyZPOg7Ezk9VuAb7Oc70V2jiA3s35U0Me8x9sMj3vXeXCKtaFQu7JebvrdQjfZfPJ58J/ZeOWk8+EazxvoVrK/KXcLGXn3fl8xLldYx/fF+Zwk73weTDXnSpw7gZP65Ok1TRjAUzxPYQt6lLATcf51la6lgdfdN+tGIfFvu6WBopj6DzGOd5HIRNyEHlTvofsiNkcz3Q4iC/r5ks4CQRAEQRAd5w8WU0/O
+   eJztmEtuwjAQhmPYZFVgwRJu0BMAG9YglSUqAtaI4yDgBDzaNeWxp+UCcIJyD/5IsUBRjE2DayeZT/qVKLI1L8/I4DgEQcyY48yhBbSEPqBPZtqr9LJC7r+gNbSBttAuYj0qVM9I7JG/b+gHOsQwl0ns8SP8P8Ughhf4mIPyUMH3V0ePm8SF77/QGapZHkcJ/pVDfDTR429MrFYEH8aSvf81D1TtvApsq/b4yPIzJ0M2D+6dibB+q+PbMOS7yE4Rytysrwr6mPd4kuFx/3UeNLC2GajdvV6O+91CN7f55PPgkdn4zq7zoYtnD+pL9sflbiEj7N7vKsaVCazj+7x8dvx3Pg8GmnMVnDt1dvUpq9c0YYCs4nlqJqBHCTsJzr+0krY08Lq7Zt0Q4v22mxooiqn/EL14J75MxE3oQfUe+iw8czTT7WBsQT+36SwQBEEQBJFyLijNT34=
   </data>
  </layer>
  <objectgroup name="level layout">
@@ -82,27 +82,27 @@
     <property name="travel" value="70"/>
    </properties>
   </object>
-  <object id="44" name="snake" x="1952" y="488" width="96" height="90">
+  <object id="44" name="snake" x="1952" y="480" width="59" height="96">
    <properties>
     <property name="travel" value="40"/>
    </properties>
   </object>
-  <object id="45" name="snake" x="1632" y="264" width="96" height="90">
+  <object id="45" name="snake" x="1632" y="256" width="59" height="96">
    <properties>
     <property name="travel" value="0"/>
    </properties>
   </object>
-  <object id="46" name="snake" x="1384" y="424" width="96" height="90">
+  <object id="46" name="snake" x="1384" y="416" width="59" height="96">
    <properties>
     <property name="travel" value="50"/>
    </properties>
   </object>
-  <object id="47" name="snake" x="864" y="392" width="96" height="90">
+  <object id="47" name="snake" x="864" y="384" width="59" height="96">
    <properties>
     <property name="travel" value="5"/>
    </properties>
   </object>
-  <object id="48" name="snake" x="512" y="40" width="96" height="90">
+  <object id="48" name="snake" x="512" y="32" width="59" height="96">
    <properties>
     <property name="travel" value="45"/>
    </properties>
@@ -110,5 +110,10 @@
   <object id="49" name="eye" x="1896" y="224" width="48" height="96"/>
   <object id="50" name="eye" x="1367" y="192" width="48" height="96"/>
   <object id="51" name="eye" x="376" y="448" width="48" height="96"/>
+  <object id="57" name="skeleton" x="640" y="256" width="48" height="96">
+   <properties>
+    <property name="travel" value="70"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
