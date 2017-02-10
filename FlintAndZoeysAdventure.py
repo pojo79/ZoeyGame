@@ -19,9 +19,11 @@ if pygame.joystick.get_count() > 0:
     joystick.init()
 
 class FlintAndZoeyGame(object):
+    levels = ["/assets/level/test_level.tmx", "/assets/level/test_level2.tmx"]
 
     def __init__(self, game_display):
         self.fps_clock = pygame.time.Clock()
+        self.current_level = 0
         self.gameOver = False
         self.world_x = 0
         self.rightBounds = 0
@@ -32,7 +34,7 @@ class FlintAndZoeyGame(object):
         self.death_scene = pygame.image.load(Game.DEATH_SCENE_OVERLAY).convert_alpha()
         self.game_over_screen = pygame.image.load(Game.GAME_OVER_OVERLAY).convert()
         self.allGameObjects = pygame.sprite.Group()
-        self.loadLevel()
+        self.loadLevel(self.current_level)
         self.load_music()
         self.spawn = self.level.spawn
         self.splat = pygame.mixer.Sound("./assets/sound/splat.wav")
@@ -42,12 +44,13 @@ class FlintAndZoeyGame(object):
         self.gameLoop()
 
     def load_music(self):
-        pygame.mixer.music.load("./assets/sound/bgm/Queer.mid")
+        pygame.mixer.music.load(self.level.level_bmg)
 
-    def loadLevel(self):
+    def loadLevel(self, level):
         #TODO externalize level variables
-        self.level = Level("/assets/level/test_level.tmx", -.2, 0.8)
+        self.level = Level(self.levels[level])
         self.tileSurface = self.level.make_map()
+        self.allGameObjects.empty()
 
         for tile_object in self.level.tmxdata.objects:
             if tile_object.name == "ground":
@@ -79,8 +82,8 @@ class FlintAndZoeyGame(object):
             self.allGameObjects.add(self.level.powerups)
             self.allGameObjects.add(self.level.checkpoints)
 
-        self.rightBounds = 450
-        self.leftBounds = self.rightBounds - 100
+        self.rightBounds = GameSetting.Game.RIGHT_BOUNDS
+        self.leftBounds = self.rightBounds - GameSetting.Game.LEFT_BOUNDS
 
     def shiftAll(self):
         #TODO something in this method causing player to "skate"
@@ -170,7 +173,8 @@ class FlintAndZoeyGame(object):
 
     def do_player_collisions(self):
         if pygame.sprite.collide_rect(self.level.goal, self.player):
-            print("yea, you win")
+            self.points += GameSetting.Game.LEVEL_CLEAR_VALUE
+            self.load_next_level()
             self.gameOver = True
         
         checkpoint = pygame.sprite.spritecollide(self.player, self.level.checkpoints, True)
@@ -240,15 +244,26 @@ class FlintAndZoeyGame(object):
         game_display.blit(death_scene, death_scene.get_rect())
         pygame.display.update()
         pygame.time.delay(1000)
+    
+    def do_win_screen(self):
+        print("Win")
 
     def respawn_player(self):
         if self.player_lives == 0:
             self.gameOver = True
         else:
             self.world_x = 0
-            self.loadLevel()
+            self.loadLevel(self.current_level)
             self.player = PlayerSprite(self.spawn)
             self.player_lives -= 1
 
+    def load_next_level(self):
+        if not self.current_level == len(self.levels):
+            self.current_level += 1
+            self.world_x = 0
+            self.loadLevel(self.current_level)
+            self.player = PlayerSprite(self.spawn)
+        else:
+            self.do_win_screen()
 
 FlintAndZoeyGame(game_display)
