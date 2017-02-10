@@ -5,14 +5,16 @@ import SpriteBase
 
 class Level(object):
 
-    def __init__(self, filename, friction, gravity):
+    def __init__(self, filename):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         tm = pytmx.load_pygame(dir_path + filename, pixelalpha=True)
         self.width = tm.width * tm.tilewidth
         self.height = tm.height * tm.tileheight
         self.tmxdata = tm
-        self.level_friction = friction
-        self.level_gravity = gravity
+        self.level_friction = float(tm.properties['friction'])
+        self.level_gravity = float(tm.properties['gravity'])
+        print('friction = '+str(self.level_friction) + ' gravity = '+str(self.level_gravity))
+        self.level_bmg = tm.properties['bgm']
         self.spawn = (0, 0)
         self.ground = SpriteBase.OnScreenGroup()
         self.enemies = SpriteBase.OnScreenGroup()

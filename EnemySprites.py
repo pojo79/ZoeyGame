@@ -177,10 +177,8 @@ class Skeleton(EnemyBase):
 
     def animate(self, ticks, force, throw):
         now = pygame.time.get_ticks()
-      
-        if (now - self.last_frame >= self.UPDATE_FRAME_ON[self.current_frame]) or (force):
+        if throw:
+            self.image = self.image_set[1]
             self.last_frame = now
-            self.current_frame += 1
-            if self.current_frame >= len(self.frames_left):
-                self.current_frame = 0
-            self.image = self.image_set[self.current_frame]
+        if now - self.last_frame >= self.UPDATE_FRAME_ON or force:
+            self.image = self.image_set[0]
