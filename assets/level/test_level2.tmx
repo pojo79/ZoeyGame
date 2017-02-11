@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="59">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" nextobjectid="61">
  <properties>
   <property name="bgm" value="./assets/sound/bgm/Queer.mid"/>
   <property name="friction" value="-0.2"/>
@@ -39,7 +39,7 @@
  </tileset>
  <layer name="Tile Layer 3" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztmWEOwiAMRuep1R1A3QGcHldMXEIIs/1YqZ35XtKfCu2jgDgMZK/cD7+eASGEtDGn/euR4sl9jBBizLK/5EG+U6vZEucUI2uo5ti5Vtf0/RMwhvV8Ws5vdA6nz7qTQrMuL8F89J5Pjzm8c7wpQlOHcuxZsZaQ9RPdR61/PH2UtWzJH/mMtpctY+t5tZaflMvY4KMcq7cP7dqxDKQfkfykXCZHH/kdCjkb6QPz4XG/iuZDevPNa5TXJ1J/tBLRh0TE/cqqbyL4QP8DiejDqm8i+EDx9CHdd2tvH1vepvfgQ/sbgOeHjw9tTeiDPqyhD/qgj3Xo4/99vADP4Zqu
+   eJztmWEOgjAMhfHUIgdQOIDocZ2JJMsyXN9oZ2feS/oT1vZrtzKGgepV99OvPaAoiqrTGvavR7An9zGKopS17S+xUd+Vy9lml2ATcyjW2ThXt/D+BVjD2h8LH8ZP3ZVMUpdXZzys/bHw4R3jLDBJHtK1V8EsiNSPdx65+bcljzSXNfEjz0h7WdOOnld78ZVimSp4pGtZ85DWjqYh/YjEV4placgjnqGQb1vywHi0mK965hHnx1N/1Kp3Hkgsljy0+sYDD/QfiEceWn3jgQeqljxK827u7uPI3XQPPKTfADw/2vCQ5oQ8yENb5EEe5LEv8vh/Hi+YEphQ
   </data>
  </layer>
  <layer name="Tile Layer 2" width="100" height="25">
@@ -120,6 +120,6 @@
     <property name="travel" value="70"/>
    </properties>
   </object>
-  <object id="58" name="golf_cart" x="2784" y="256" width="120" height="96"/>
+  <object id="58" name="golf_cart" x="3072" y="256" width="120" height="96"/>
  </objectgroup>
 </map>

@@ -16,6 +16,10 @@ class PlayerSprite(SpriteBase.GameSprite):
         self.nerf_dart_image_right = pygame.image.load(Game.NERF_DART_IMAGE).convert()
         self.nerf_dart_image_left = pygame.transform.flip(self.nerf_dart_image_right, True, False)
         self.image_right = pygame.image.load(Game.PLAYER_SPRITE_SHEET).convert_alpha()
+        self.image_jump_left = pygame.image.load("./assets/art/flint_jump.png").convert()
+        self.image_jump_left.set_colorkey(Game.COLOR_KEY)
+        self.image_jump_right = pygame.transform.flip(self.image_jump_left, True, False)
+        self.image_jump_right.set_colorkey(Game.COLOR_KEY)
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
         self.rect = self.image.get_rect()
@@ -57,6 +61,10 @@ class PlayerSprite(SpriteBase.GameSprite):
                 self.onGround = False
                 self.acc.y = Move.PLAYER_JUMP
                 self.jump_buffer = None
+                if self.facing == Move.LEFT:
+                    self.image = self.image_jump_left
+                else:
+                    self.image = self.image_jump_right
 
     """ add a jumper to the buffer with the current time of button press
     This will make jumping more responsive since you can press button slightly before hitting the ground and still

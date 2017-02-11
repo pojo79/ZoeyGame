@@ -47,10 +47,11 @@ class Game():
     PLAYER_SPRITE_SHEET = "./assets/art/zoeyPlaceHolder.png"
     NERF_PISTOL_IMAGE = "./assets/art/nerf_pistol.png"
     NERF_RIFLE_IMAGE = "./assets/art/nerf_pistol.png"
-    PLAYER_START_LIVES = 2
+    PLAYER_START_LIVES = 200
 
 class Enemy():
     ZOMBIE_POINT_VALUE = 200
+    ZOMBIE_ANIMATE_SPEED = 200
     ZOMBIE_WALK_SPEED = .08
     ZOMBIE_SPRITE_WIDTH = 59
     ZOMBIE_SPRITE_HEIGHT = 96
@@ -70,6 +71,15 @@ class Enemy():
     GOLFER_POINT_VALUE = 300
     GOLFER_BULLET_SPEED = 12
     GOLFER_BULLET_ARC = -7
-    GOLFER_SPRITE_SHEET = "./assets/art/golfer.png"
+    GOLFER_SPRITE_SHEET = "./assets/art/golfer_sprite_sheet.png"
+    GOLFER_SPRITE_WIDTH = 48
+    GOLFER_SPRITE_HEIGHT = 96
+    GOLFER_ANIMATE_SPEED = 1000
     GOLFER_BULLET_SPRITE = "./assets/art/golfer_bullet.png"
     GOLFER_SHOOT_RATE = 2000
+    GOLF_CART_POINT_VALUE = 300
+    GOLF_CART_SPRITE_SHEET = "./assets/art/golf_cart_sprite_sheet.png"
+    GOLF_CART_SPRITE_WIDTH = 120
+    GOLF_CART_SPRITE_HEIGHT = 96
+    GOLF_CART_ANIMATE_SPEED = 1000
+    GOLF_CART_MOVE_SPEED = 1.5
