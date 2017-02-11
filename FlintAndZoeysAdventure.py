@@ -8,6 +8,7 @@ from ScreenUI import *
 from GameObjects import Obstacle
 import GameObjects
 from Level import *
+from ParticleSystem import *
 
 # initiate pygame
 pygame.init()
@@ -34,6 +35,8 @@ class FlintAndZoeyGame(object):
         self.event_handler = None #set to start screen handler when start screen created
         self.death_scene = pygame.image.load(Game.DEATH_SCENE_OVERLAY).convert_alpha()
         self.game_over_screen = pygame.image.load(Game.GAME_OVER_OVERLAY).convert()
+        self.smoke_particle = pygame.image.load(GameSetting.ParticleImages.SMOKE).convert()
+        self.smoke_particle.set_colorkey(GameSetting.Game.COLOR_KEY)
         self.allGameObjects = pygame.sprite.Group()
         self.loadLevel(self.current_level)
         self.load_music()
@@ -42,6 +45,7 @@ class FlintAndZoeyGame(object):
         self.game_display = game_display
         self.player = PlayerSprite(self.spawn)
         self.points = 0
+        self.particleSystems = []
         self.gameLoop()
 
     def load_music(self):
@@ -76,8 +80,8 @@ class FlintAndZoeyGame(object):
             if tile_object.name == "eye":
                 self.level.enemies.add(Golfer(tile_object.x, tile_object.y))
             if tile_object.name == "golf_cart":
-                print('loading golf_cart at '+str(tile_object.x)+str(tile_object.y))
-                self.level.enemies.add(GolfCart(tile_object.x, tile_object.y))
+                trigger = int(tile_object.properties['trigger'])
+                self.level.enemies.add(GolfCart(tile_object.x, tile_object.y, trigger))
 
             self.allGameObjects.add(self.level.ground)
             self.allGameObjects.add(self.level.enemies)
@@ -113,6 +117,10 @@ class FlintAndZoeyGame(object):
         for item in self.allGameObjects:
             item.world_shift(xdiff)
 
+        #do particles seperatly becuase they are not in gameobjects group
+        for particle in self.particleSystems:
+            particle.world_shift(xdiff)
+
     def gameLoop(self):
         pygame.mixer.music.play()
         pygame.mixer.music.set_volume(Game.MUSIC_VOLUME)
@@ -139,11 +147,13 @@ class FlintAndZoeyGame(object):
             self.do_player_bullet_collisions(bullets)
             self.do_player_collisions()
             self.do_enemy_ground_detection()
-            self.do_enemy_bullet_loop()
-            
+            self.do_enemy_bullet_loop()            
             bullets.update(self.level.level_gravity, self.level.width, self.level.height)
             self.level.enemies.update(self.game_display.get_width(), self.game_display.get_height(),
                 self.level.level_friction, self.level.level_gravity, self.player.pos, force_update)
+            
+            for particleSystem in self.particleSystems:
+                particleSystem.update_particles()
 
             # draw platform hitbox
             # self.level.ground.draw(self.game_display)
@@ -155,6 +165,8 @@ class FlintAndZoeyGame(object):
             self.level.enemies.draw(self.game_display)
             self.player.draw(self.game_display)
             gameOverlay.draw(self.game_display, self.player_lives, self.player.get_ammo(), self.points)
+            for particleSystem in self.particleSystems:
+                particleSystem.draw_particles(self.game_display)
             pygame.display.update()
             
             self.fps_clock.tick(GameSetting.Game.FPS)
@@ -198,6 +210,7 @@ class FlintAndZoeyGame(object):
             for hit in hits:
                 if self.player.kill_enemy(hit, self.level.level_gravity):
                     self.splat.play()
+                    self.do_kill_enemy(hit)
                     hit.kill()
                     self.points += hit.get_point_worth()
 
@@ -209,12 +222,15 @@ class FlintAndZoeyGame(object):
         if get_powerup:
             self.player.set_gun(get_powerup[0])
 
+    def do_kill_enemy(self, enemy):
+        self.particleSystems.append(ParticleSystem(6,enemy.rect.center, self.smoke_particle))
 
     def do_player_bullet_collisions(self, bullets):
         if bullets.sprites:
             capped = pygame.sprite.groupcollide(bullets, self.level.enemies, False, True)
             if capped:
                 for dart in capped:
+                    self.do_kill_enemy(capped[dart][0])
                     self.points += math.floor(capped[dart][0].get_point_worth()/2)
                     if dart.velocity.x > 0:
                         dart.acceleration = vec(0, 0)

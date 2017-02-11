@@ -233,9 +233,9 @@ class GolfCart(EnemyBase):
     points = Enemy.GOLF_CART_POINT_VALUE
     UPDATE_FRAME_ON = Enemy.GOLF_CART_ANIMATE_SPEED
 
-    def __init__(self, start_x, start_y):
+    def __init__(self, start_x, start_y, trigger):
         super().__init__((start_x, start_y))
-        print('making golf_cart')
+        self.trigger = trigger
         self.current_frame = 0
         self.last_frame = 0
         self.spritesheet = SpriteBase.Spritesheet(Enemy.GOLF_CART_SPRITE_SHEET)
@@ -246,12 +246,13 @@ class GolfCart(EnemyBase):
         self.started_moving = False
 
     def update(self, friction, gravity, player_pos):
-        if self.pos.x < player_pos.x:
-            self.acc.x = Enemy.GOLF_CART_MOVE_SPEED
-            self.image_set = self.frames_right
-        if self.pos.x > player_pos.x:
-            self.acc.x = -Enemy.GOLF_CART_MOVE_SPEED
-            self.image_set = self.frames_left
+        if math.fabs(player_pos.x - self.pos.x) <= self.trigger:
+            if self.pos.x < player_pos.x:
+                self.acc.x = Enemy.GOLF_CART_MOVE_SPEED
+                self.image_set = self.frames_right
+            if self.pos.x > player_pos.x:
+                self.acc.x = -Enemy.GOLF_CART_MOVE_SPEED
+                self.image_set = self.frames_left
         
         self.acc.y = gravity
         self.acc.x += self.vel.x * friction

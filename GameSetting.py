@@ -1,3 +1,4 @@
+import pygame
 class Move():
 
     RIGHT = 'right'
@@ -35,7 +36,7 @@ class Game():
     OVERLAY_LIVES_POS = 100
     OVERLAY_AMMO_POS = 295
     OVERLAY_SCORE_POS = 820
-    DART_BOUNCE = 2
+    DART_BOUNCE = 3
     MUSIC_VOLUME = .05
     NERF_PISTOL_SPEED = 12
     NERF_PISTOL_ARC = -4
@@ -83,3 +84,7 @@ class Enemy():
     GOLF_CART_SPRITE_HEIGHT = 96
     GOLF_CART_ANIMATE_SPEED = 1000
     GOLF_CART_MOVE_SPEED = 1.5
+
+class ParticleImages(object):
+    SMOKE = "./assets/art/particle/smoke.png"
+    BLOOD = "./assets/art/particle/blood.png"
