@@ -6,7 +6,7 @@ class Move():
     STOP = 'stop'
     PLAYER_MOVE = .8 
     PLAYER_RUN = 1.7
-    PLAYER_JUMP = -15
+    PLAYER_JUMP = -16
     PLAYER_POP = -8
     ZERO_THRESHOLD = .025
     PLAYER_BULLET_SPEED = 12
@@ -33,6 +33,7 @@ class Game():
     DEATH_SCENE_OVERLAY = "./assets/art/death_scene.png"
     GAME_OVER_OVERLAY = "./assets/art/game_over.png"
     OVERLAY_IMAGE = "./assets/art/screen_overlay.png"
+    START_SCREEN = "./assets/art/start_screen.png"
     OVERLAY_LIVES_POS = 100
     OVERLAY_AMMO_POS = 295
     OVERLAY_SCORE_POS = 820
@@ -45,9 +46,12 @@ class Game():
     NERF_RIFLE_ARC = -3
     NERF_RIFLE_START_AMMO = 6
     NERF_DART_IMAGE = "./assets/art/nerf_dart.png"  
-    PLAYER_SPRITE_SHEET = "./assets/art/zoeyPlaceHolder.png"
+    
+    ZOEY_SPRITE_SHEET = "./assets/art/zoey_sprite_sheet.png"
+    PLAYER_SPRITE_HEIGHT = 80
+    PLAYER_SPRITE_WIDTH = 60
     NERF_PISTOL_IMAGE = "./assets/art/nerf_pistol.png"
-    NERF_RIFLE_IMAGE = "./assets/art/nerf_pistol.png"
+    NERF_RIFLE_IMAGE = "./assets/art/nerf_rifle.png"
     PLAYER_START_LIVES = 200
 
 class Enemy():
