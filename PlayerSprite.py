@@ -7,6 +7,7 @@ import SpriteBase
 vec = pygame.math.Vector2
 
 class PlayerSprite(SpriteBase.GameSprite):
+    UPDATE_FRAME_ON = 100
 
     def __init__(self, start_coord):
         super().__init__(start_coord)
@@ -15,13 +16,10 @@ class PlayerSprite(SpriteBase.GameSprite):
         self.is_dead = False
         self.nerf_dart_image_right = pygame.image.load(Game.NERF_DART_IMAGE).convert()
         self.nerf_dart_image_left = pygame.transform.flip(self.nerf_dart_image_right, True, False)
-        self.image_right = pygame.image.load(Game.PLAYER_SPRITE_SHEET).convert_alpha()
-        self.image_jump_left = pygame.image.load("./assets/art/flint_jump.png").convert()
-        self.image_jump_left.set_colorkey(Game.COLOR_KEY)
-        self.image_jump_right = pygame.transform.flip(self.image_jump_left, True, False)
-        self.image_jump_right.set_colorkey(Game.COLOR_KEY)
-        self.image_left = pygame.transform.flip(self.image_right, True, False)
-        self.image = self.image_right
+        self.sprite_sheet = SpriteBase.Spritesheet(Game.ZOEY_SPRITE_SHEET)
+        self.load_player_sprites()
+        self.image_set = self.stop_image_left
+        self.image = self.image_set[0]
         self.rect = self.image.get_rect()
         self.direction = Move.STOP
         self.facing = Move.RIGHT
@@ -30,10 +28,25 @@ class PlayerSprite(SpriteBase.GameSprite):
         self.duck = False
         self.run = False
         self.onGround = False
+        self.current_frame = 0
+        self.last_frame = 0
         self.gun = None
         self.rect.move_ip(self.pos)
         self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
+        self.shoot_sound = pygame.mixer.Sound("./assets/sound/shoot.wav")
         self.bullets = SpriteBase.BulletBaseGroup()
+
+    def load_player_sprites(self):
+        self.frames_right = [self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 0, 0),
+                                    self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 1, 0),
+                                    self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 2, 0)]
+        self.stop_image_right = [self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 3, 0)]
+        self.stop_image_left = [pygame.transform.flip(self.stop_image_right[0], True, False)]
+        self.image_jump_right = self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 4, 0)
+        self.image_jump_left = pygame.transform.flip(self.image_jump_right, True, False)
+        self.frames_left = []
+        for image in self.frames_right:
+            self.frames_left.append(pygame.transform.flip(image, True, False))
 
     def get_bullets(self):
         return self.bullets
@@ -44,7 +57,13 @@ class PlayerSprite(SpriteBase.GameSprite):
     def move(self, direction, stop_movement=False):
         if stop_movement and self.direction == direction:
             self.direction = Move.STOP
+            if direction == Move.LEFT:
+                self.image_set = self.stop_image_left
+            else:
+                self.image_set = self.stop_image_right
         elif not stop_movement:
+            if not direction == self.direction:
+                self.current_frame = 0
             self.direction = direction
             self.facing = direction
     
@@ -81,13 +100,14 @@ class PlayerSprite(SpriteBase.GameSprite):
                 self.move_speed = Move.PLAYER_MOVE
 
     def update(self, friction, gravity, floor):
+        force = False
         self.set_move_speed()
         if self.direction == Move.LEFT:
             self.acc.x = -self.move_speed
-            self.image = self.image_left
+            self.image_set = self.frames_left
         if self.direction == Move.RIGHT:
             self.acc.x = self.move_speed
-            self.image = self.image_right
+            self.image_set = self.frames_right
         self.jump()
         
         self.acc.x += self.vel.x * friction
@@ -102,7 +122,17 @@ class PlayerSprite(SpriteBase.GameSprite):
             self.is_dead = True
         self.acc = vec(0, gravity)
         
+        self.animate(force)
         self.onGround = False
+
+    def animate(self, force):
+        now = pygame.time.get_ticks()
+        if (now - self.last_frame >= self.UPDATE_FRAME_ON) and self.onGround or (force):
+            self.last_frame = now
+            self.current_frame += 1
+            if self.current_frame >= len(self.image_set):
+                self.current_frame = 0
+            self.image = self.image_set[self.current_frame]   
 
     def set_position(self, object):
         y_vel = math.ceil(self.vel.y + .5 * self.acc.y)
@@ -134,9 +164,9 @@ class PlayerSprite(SpriteBase.GameSprite):
         return ammo
 
     def shoot(self):
-        #TODO move image loading to player init, save copy of image to use
         if not self.gun == None and self.gun.get_ammo_amount() > 0:
             self.gun.set_ammo_amount(self.gun.get_ammo_amount() - 1)
+            self.shoot_sound.play()
             if self.facing == Move.LEFT:
                 self.bullets.add(Projectile(-self.gun.get_x_shoot_speed(),
                                             self.gun.get_y_shoot_speed(), (self.rect.x-self.nerf_dart_image_left.get_rect().width,self.rect.y+self.rect.height/2), self.nerf_dart_image_left))

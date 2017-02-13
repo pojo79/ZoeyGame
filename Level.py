@@ -2,6 +2,7 @@ import pygame
 import os
 import pytmx
 import SpriteBase
+from GameSetting import Game
 
 class Level(object):
 
@@ -13,7 +14,7 @@ class Level(object):
         self.tmxdata = tm
         self.level_friction = float(tm.properties['friction'])
         self.level_gravity = float(tm.properties['gravity'])
-        print('friction = '+str(self.level_friction) + ' gravity = '+str(self.level_gravity))
+        self.level_background = pygame.image.load("./assets/level/golf_background.png")
         self.level_bmg = tm.properties['bgm']
         self.spawn = (0, 0)
         self.ground = SpriteBase.OnScreenGroup()
@@ -33,6 +34,7 @@ class Level(object):
 
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
-        temp_surface.fill((0, 100, 250))  # blue background
+        temp_surface.fill(Game.COLOR_KEY)  # blue background
+        temp_surface.set_colorkey(Game.COLOR_KEY)
         self.render(temp_surface)
         return temp_surface

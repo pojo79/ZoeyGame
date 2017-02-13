@@ -124,7 +124,7 @@ class Golfer(EnemyBase):
         self.bullet_last_shot = 0
         self.current_frame = 1
         self.last_frame = 0
-        self.facing = "RIGHT"
+        self.facing = "LEFT"
 
     def load_frames(self):
         self.frames_right = [self.sprite_sheet.get_image_row_column(Enemy.GOLFER_SPRITE_WIDTH, Enemy.GOLFER_SPRITE_HEIGHT, 0, 0),
@@ -141,14 +141,14 @@ class Golfer(EnemyBase):
             throw = True
             self.bullet_last_shot = ticks
             if self.pos.x < player_pos.x:
-                self.bullets.add(Projectile(
-                    Enemy.GOLFER_BULLET_SPEED, Enemy.GOLFER_BULLET_ARC, self.rect.midbottom, self.bullet_image))
+                self.bullets.add(Projectile(Enemy.GOLFER_BULLET_SPEED, Enemy.GOLFER_BULLET_ARC, self.rect.midbottom, self.bullet_image))
                 if self.facing == "RIGHT":
                     force = True
                     self.current_frame = 0
+                self.image_set = self.frames_left
+                self.facing = "LEFT"
             if self.pos.x > player_pos.x:
-                self.bullets.add(Projectile(-Enemy.GOLFER_BULLET_SPEED,
-                                 Enemy.GOLFER_BULLET_ARC, self.rect.midbottom, self.bullet_image))
+                self.bullets.add(Projectile(-Enemy.GOLFER_BULLET_SPEED,Enemy.GOLFER_BULLET_ARC, self.rect.midbottom, self.bullet_image))
                 if self.facing == "LEFT":
                     force = True
                     self.current_frame = 0
@@ -233,9 +233,9 @@ class GolfCart(EnemyBase):
     points = Enemy.GOLF_CART_POINT_VALUE
     UPDATE_FRAME_ON = Enemy.GOLF_CART_ANIMATE_SPEED
 
-    def __init__(self, start_x, start_y):
+    def __init__(self, start_x, start_y, trigger):
         super().__init__((start_x, start_y))
-        print('making golf_cart')
+        self.trigger = trigger
         self.current_frame = 0
         self.last_frame = 0
         self.spritesheet = SpriteBase.Spritesheet(Enemy.GOLF_CART_SPRITE_SHEET)
@@ -244,19 +244,33 @@ class GolfCart(EnemyBase):
         self.image_set = self.frames_left
         self.rect = self.image.get_rect()
         self.started_moving = False
+        self.triggered = False
+        self.speed = 0
 
     def update(self, friction, gravity, player_pos):
-        if self.pos.x < player_pos.x:
-            self.acc.x = Enemy.GOLF_CART_MOVE_SPEED
-            self.image_set = self.frames_right
-        if self.pos.x > player_pos.x:
-            self.acc.x = -Enemy.GOLF_CART_MOVE_SPEED
-            self.image_set = self.frames_left
+        force = False
+        if math.fabs(player_pos.x - self.pos.x) <= self.trigger:
+            self.triggered = True
+        if  self.triggered and not self.started_moving:
+            print('player pos = '+ str(player_pos) + 'self pos = '+ str(self.pos))
+            if self.pos.x < player_pos.x:
+                self.speed = Enemy.GOLF_CART_MOVE_SPEED
+                self.image_set = self.frames_right
+                force = True
+            if self.pos.x > player_pos.x:
+                self.speed = -Enemy.GOLF_CART_MOVE_SPEED
+                self.image_set = self.frames_left
+                force = True
+            self.started_moving = True
+        if self.pos.x >= Game.WINDOW_WIDTH-50 or self.pos.x <= 0 + 50:
+            self.started_moving = False
         
+        self.acc.x = self.speed
         self.acc.y = gravity
         self.acc.x += self.vel.x * friction
         self.update_position(gravity)
-        self.animate(False)
+        self.animate(force)
+        
 
     def animate(self, force):
         now = pygame.time.get_ticks()

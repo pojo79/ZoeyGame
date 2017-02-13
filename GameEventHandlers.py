@@ -85,3 +85,13 @@ class GameOverHandler(object):
             if event.type == pygame.JOYBUTTONDOWN:
                 return False
         return True
+
+class GameStartHandler(object):
+
+    def handle_event(self):
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                return True
+        return False

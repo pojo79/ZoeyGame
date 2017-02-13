@@ -8,6 +8,8 @@ from ScreenUI import *
 from GameObjects import Obstacle
 import GameObjects
 from Level import *
+from ParticleSystem import *
+from ScrollingBackground import *
 
 # initiate pygame
 pygame.init()
@@ -19,7 +21,7 @@ if pygame.joystick.get_count() > 0:
     joystick.init()
 
 class FlintAndZoeyGame(object):
-    levels = ["/assets/level/test_level.tmx", "/assets/level/test_level2.tmx"]
+    levels = ["/assets/level/golf_level.tmx","/assets/level/test_level.tmx", "/assets/level/test_level2.tmx"]
 
     def __init__(self, game_display):
         self.fps_clock = pygame.time.Clock()
@@ -34,6 +36,8 @@ class FlintAndZoeyGame(object):
         self.event_handler = None #set to start screen handler when start screen created
         self.death_scene = pygame.image.load(Game.DEATH_SCENE_OVERLAY).convert_alpha()
         self.game_over_screen = pygame.image.load(Game.GAME_OVER_OVERLAY).convert()
+        self.smoke_particle = pygame.image.load(GameSetting.ParticleImages.SMOKE).convert()
+        self.smoke_particle.set_colorkey(GameSetting.Game.COLOR_KEY)
         self.allGameObjects = pygame.sprite.Group()
         self.loadLevel(self.current_level)
         self.load_music()
@@ -42,7 +46,9 @@ class FlintAndZoeyGame(object):
         self.game_display = game_display
         self.player = PlayerSprite(self.spawn)
         self.points = 0
+        self.particleSystems = []
         self.gameLoop()
+        
 
     def load_music(self):
         pygame.mixer.music.load(self.level.level_bmg)
@@ -59,6 +65,8 @@ class FlintAndZoeyGame(object):
                     Obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
             if tile_object.name == "nerf_pistol":
                 self.level.powerups.add(GameObjects.NerfPistol(tile_object.x, tile_object.y))
+            if tile_object.name == "nerf_rifle":
+                self.level.powerups.add(GameObjects.NerfRifle(tile_object.x, tile_object.y))
             if tile_object.name == "player_spawn":
                 self.level.spawn = (tile_object.x, tile_object.y)
             if tile_object.name == "goal":
@@ -67,17 +75,17 @@ class FlintAndZoeyGame(object):
                 self.allGameObjects.add(self.level.goal)
             if tile_object.name == "checkpoint":
                 self.level.checkpoints.add(Obstacle(tile_object.x, tile_object.y, tile_object.width, tile_object.height))
-            if tile_object.name == "snake":
+            if tile_object.name == "zombie":
                 travel = tile_object.properties['travel']
                 self.level.enemies.add(
                     Zombie(tile_object.x, tile_object.y, float(travel)))
             if tile_object.name == "skeleton":
                 self.level.enemies.add(Skeleton(tile_object.x, tile_object.y))
-            if tile_object.name == "eye":
+            if tile_object.name == "golfer":
                 self.level.enemies.add(Golfer(tile_object.x, tile_object.y))
             if tile_object.name == "golf_cart":
-                print('loading golf_cart at '+str(tile_object.x)+str(tile_object.y))
-                self.level.enemies.add(GolfCart(tile_object.x, tile_object.y))
+                trigger = int(tile_object.properties['trigger'])
+                self.level.enemies.add(GolfCart(tile_object.x, tile_object.y, trigger))
 
             self.allGameObjects.add(self.level.ground)
             self.allGameObjects.add(self.level.enemies)
@@ -113,12 +121,30 @@ class FlintAndZoeyGame(object):
         for item in self.allGameObjects:
             item.world_shift(xdiff)
 
+        #do particles seperatly becuase they are not in gameobjects group
+        for particle in self.particleSystems:
+            particle.world_shift(xdiff)
+
+        return xdiff
+
+    def start(self):
+        start_game_splash = pygame.image.load(Game.START_SCREEN)
+        self.handler = GameEventHandlers.GameStartHandler()
+        
+        startGame = False
+        while not startGame:
+            startGame = self.handler.handle_event()
+            self.game_display.blit(start_game_splash,(0,0))
+            pygame.display.update()
+  
     def gameLoop(self):
+        self.start()
         pygame.mixer.music.play()
         pygame.mixer.music.set_volume(Game.MUSIC_VOLUME)
-        self.handler = GameEventHandlers.GamePlayEventHandler(self, self.player)
         gameOverlay = ScreenOverlay()
+        self.handler = GameEventHandlers.GamePlayEventHandler(self, self.player)
         force_update = False
+        sb = ScrollingBackground(self.level.level_background, self.game_display.get_width(), self.game_display.get_height())
 
         while not self.gameOver:
             if self.player.is_dead:
@@ -128,22 +154,27 @@ class FlintAndZoeyGame(object):
                 force_update = True
 
             self.handler.handleEvent()
-            self. shiftAll()
+            xdiff = self. shiftAll()
 
+            sb.update(xdiff)
+            sb.draw(self.game_display)
+            #self.game_display.blit(self.level.level_background, (self.world_x/3,0))
             self.game_display.blit(self.tileSurface, (self.world_x, 0))
             
             self.player.update(self.level.level_friction,
                                self.level.level_gravity, self.tileSurface.get_height())
 
             bullets = self.player.get_bullets()
+            bullets.update(self.level.level_gravity, self.level.width, self.level.height)
             self.do_player_bullet_collisions(bullets)
             self.do_player_collisions()
             self.do_enemy_ground_detection()
-            self.do_enemy_bullet_loop()
-            
-            bullets.update(self.level.level_gravity, self.level.width, self.level.height)
+            self.do_enemy_bullet_loop()            
             self.level.enemies.update(self.game_display.get_width(), self.game_display.get_height(),
                 self.level.level_friction, self.level.level_gravity, self.player.pos, force_update)
+            
+            for particleSystem in self.particleSystems:
+                particleSystem.update_particles()
 
             # draw platform hitbox
             # self.level.ground.draw(self.game_display)
@@ -152,9 +183,12 @@ class FlintAndZoeyGame(object):
             # draw items
             bullets.draw(self.game_display)
             self.level.powerups.draw(self.game_display)
+            self.level.ammo.draw(self.game_display)
             self.level.enemies.draw(self.game_display)
             self.player.draw(self.game_display)
             gameOverlay.draw(self.game_display, self.player_lives, self.player.get_ammo(), self.points)
+            for particleSystem in self.particleSystems:
+                particleSystem.draw_particles(self.game_display)
             pygame.display.update()
             
             self.fps_clock.tick(GameSetting.Game.FPS)
@@ -181,7 +215,6 @@ class FlintAndZoeyGame(object):
     def do_enemy_bullet_collision(self, bullets):
         playerHit = pygame.sprite.spritecollide(self.player, bullets, False)
         if playerHit:
-            print(playerHit)
             self.player.is_dead = True
 
     def do_player_collisions(self):
@@ -198,6 +231,7 @@ class FlintAndZoeyGame(object):
             for hit in hits:
                 if self.player.kill_enemy(hit, self.level.level_gravity):
                     self.splat.play()
+                    self.do_kill_enemy(hit)
                     hit.kill()
                     self.points += hit.get_point_worth()
 
@@ -209,12 +243,15 @@ class FlintAndZoeyGame(object):
         if get_powerup:
             self.player.set_gun(get_powerup[0])
 
+    def do_kill_enemy(self, enemy):
+        self.particleSystems.append(ParticleSystem(6,enemy.rect.center, self.smoke_particle))
 
     def do_player_bullet_collisions(self, bullets):
         if bullets.sprites:
             capped = pygame.sprite.groupcollide(bullets, self.level.enemies, False, True)
             if capped:
                 for dart in capped:
+                    self.do_kill_enemy(capped[dart][0])
                     self.points += math.floor(capped[dart][0].get_point_worth()/2)
                     if dart.velocity.x > 0:
                         dart.acceleration = vec(0, 0)
@@ -222,24 +259,27 @@ class FlintAndZoeyGame(object):
                     elif dart.velocity.x < 0:
                         dart.velocity = vec(GameSetting.Game.DART_BOUNCE, self.level.level_gravity)
             
-            ground_capped = pygame.sprite.groupcollide(bullets, self.level.ground, False, False)
+            ground_capped = pygame.sprite.groupcollide(bullets, self.level.ground, True, False)
             if ground_capped:
                 for dart in ground_capped:
                     self.level.ammo.add(dart)
                     dart.acceleration = vec(0, 0)
                     dart.velocity = vec(0, 0)
                     dart.rect.y = ground_capped[dart][0].rect.top - dart.rect.height
+                    self.level.ammo.add(dart)
 
-            pickup_ammo = pygame.sprite.spritecollide(self.player, bullets, True)
+            pickup_ammo = pygame.sprite.spritecollide(self.player, self.level.ammo, True)
             if pickup_ammo:
                 for ammo in pickup_ammo:
                     self.player.add_ammo(1)
+
         self.allGameObjects.add(self.level.ammo)
 
     def do_game_over(self):
         ending = True
         
         handler = GameEventHandlers.GameOverHandler()
+        
         while ending:
             self.game_over_screen.blit(self.game_over_screen, self.game_over_screen.get_rect())
             game_display.blit(self.game_over_screen, self.game_over_screen.get_rect())
@@ -271,6 +311,7 @@ class FlintAndZoeyGame(object):
             self.player_lives -= 1
 
     def load_next_level(self):
+
         if not self.current_level >= len(self.levels):
             self.current_level += 1
             self.world_x = 0
