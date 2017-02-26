@@ -82,7 +82,6 @@ class OnScreenGroup(pygame.sprite.Group):
     def update(self, screen_width, screen_height, friction, gravity, player_pos, initialize):
         
         for sprite in self.sprites():
-            print(sprite.sprite_on_screen(screen_width, screen_height))
             if sprite.sprite_on_screen(screen_width, screen_height) or initialize:
                 sprite.update(friction,gravity,player_pos)
 
