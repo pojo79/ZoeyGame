@@ -20,6 +20,7 @@ class Level(object):
         self.ground = SpriteBase.OnScreenGroup()
         self.enemies = SpriteBase.OnScreenGroup()
         self.powerups = SpriteBase.OnScreenGroup()
+        self.papers = SpriteBase.OnScreenGroup()
         self.ammo = SpriteBase.OnScreenGroup()
         self.checkpoints = SpriteBase.OnScreenGroup()
         self.goal = 0

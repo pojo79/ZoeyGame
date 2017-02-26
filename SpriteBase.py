@@ -7,7 +7,7 @@ class GameSprite(pygame.sprite.Sprite):
 
     def __init__(self, start_coord):
         pygame.sprite.Sprite.__init__(self)
-        
+        self.collision_rect = None
         self.pos = vec(start_coord)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
@@ -48,6 +48,16 @@ class GameSprite(pygame.sprite.Sprite):
         self.rect.x = self.pos.x
         self.rect.y = self.pos.y
 
+        if self.collision_rect:
+            self.collision_rect.centerx = self.rect.centerx
+            self.collision_rect.y = self.pos.y + (self.rect.height - self.collision_rect.height)       
+        
+    def get_collision_rect(self):
+        if self.collision_rect:
+            return self.collision_rect
+        else:
+            return self.rect
+
 class Spritesheet:
 
     def __init__(self, filename):
@@ -70,8 +80,9 @@ class OnScreenGroup(pygame.sprite.Group):
         super().__init__(self)
 
     def update(self, screen_width, screen_height, friction, gravity, player_pos, initialize):
-
+        
         for sprite in self.sprites():
+            print(sprite.sprite_on_screen(screen_width, screen_height))
             if sprite.sprite_on_screen(screen_width, screen_height) or initialize:
                 sprite.update(friction,gravity,player_pos)
 
@@ -79,6 +90,12 @@ class OnScreenGroup(pygame.sprite.Group):
         for sprite in self.sprites():
             if sprite.is_should_draw():
                 surface.blit(sprite.image, sprite.rect)
+
+                if GameSetting.Game.DEBUG:
+                    collision_rect = sprite.get_collision_rect()
+                    collision_surface = pygame.Surface((collision_rect.width, collision_rect.height))
+                    collision_surface.fill((120,230,20))
+                    surface.blit(collision_surface, collision_rect)
 
 class BulletBaseGroup(OnScreenGroup):
     def __init__(self):
@@ -95,3 +112,9 @@ class BulletBaseGroup(OnScreenGroup):
     def draw(self, surface):
         for sprite in self.sprites():
             surface.blit(sprite.image, sprite.rect)
+
+            if GameSetting.Game.DEBUG:
+                collision_rect = sprite.get_collision_rect()
+                collision_surface = pygame.Surface((collision_rect.width, collision_rect.height))
+                collision_surface.fill((120,230,20))
+                surface.blit(collision_surface, collision_rect)

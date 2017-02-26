@@ -47,6 +47,7 @@ class Zombie(EnemyBase):
         self.x_travel = 10000
         self.x_max_travel = travel
         self.facing = Move.RIGHT
+        self.collision_rect = self.rect.inflate(Enemy.ZOMBIE_X_INFLATE, Enemy.ZOMBIE_Y_INFLATE)
 
     def load_images(self):
         self.walking_frames_left = [self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 2, 0),
@@ -114,17 +115,18 @@ class Golfer(EnemyBase):
         self.load_frames()
         self.image_set = self.frames_right
         self.image = self.image_set[1]
-        self.bullet_image = pygame.image.load(
-            Enemy.GOLFER_BULLET_SPRITE).convert()
+        self.bullet_image = pygame.image.load(Enemy.GOLFER_BULLET_SPRITE).convert()
         self.bullet_image.set_colorkey(Game.COLOR_KEY)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.collision_rect = self.rect.inflate(Enemy.GOLFER_X_INFLATE, Enemy.GOLFER_Y_INFLATE)
         self.bullets = SpriteBase.BulletBaseGroup()
         self.bullet_last_shot = 0
         self.current_frame = 1
         self.last_frame = 0
         self.facing = "LEFT"
+        self.swing_sound = pygame.mixer.Sound(Enemy.GOLFER_SOUND)
 
     def load_frames(self):
         self.frames_right = [self.sprite_sheet.get_image_row_column(Enemy.GOLFER_SPRITE_WIDTH, Enemy.GOLFER_SPRITE_HEIGHT, 0, 0),
@@ -140,6 +142,7 @@ class Golfer(EnemyBase):
         if ticks - self.bullet_last_shot > Enemy.GOLFER_SHOOT_RATE:
             throw = True
             self.bullet_last_shot = ticks
+            self.swing_sound.play()
             if self.pos.x < player_pos.x:
                 self.bullets.add(Projectile(Enemy.GOLFER_BULLET_SPEED, Enemy.GOLFER_BULLET_ARC, self.rect.midbottom, self.bullet_image))
                 if self.facing == "RIGHT":
@@ -186,6 +189,7 @@ class Skeleton(EnemyBase):
         self.bullet_last_shot = 0
         self.current_frame = 1
         self.last_frame = 0
+        self.collision_rect = self.rect.inflate(Enemy.SKELETON_X_INFLATE, Enemy.SKELETON_Y_INFLATE)
         self.facing = "RIGHT"
 
     def load_frames(self):
@@ -246,13 +250,15 @@ class GolfCart(EnemyBase):
         self.started_moving = False
         self.triggered = False
         self.speed = 0
+        self.collision_rect = self.rect.inflate(Enemy.GOLFCART_X_INFLATE, Enemy.GOLFCART_Y_INFLATE)
+        self.sound = pygame.mixer.Sound(Enemy.GOLF_CART_SOUND)
+        
 
     def update(self, friction, gravity, player_pos):
         force = False
         if math.fabs(player_pos.x - self.pos.x) <= self.trigger:
             self.triggered = True
         if  self.triggered and not self.started_moving:
-            print('player pos = '+ str(player_pos) + 'self pos = '+ str(self.pos))
             if self.pos.x < player_pos.x:
                 self.speed = Enemy.GOLF_CART_MOVE_SPEED
                 self.image_set = self.frames_right
@@ -264,6 +270,9 @@ class GolfCart(EnemyBase):
             self.started_moving = True
         if self.pos.x >= Game.WINDOW_WIDTH-50 or self.pos.x <= 0 + 50:
             self.started_moving = False
+        
+        if math.fabs(self.vel.x) > 0:
+            self.sound.play()
         
         self.acc.x = self.speed
         self.acc.y = gravity

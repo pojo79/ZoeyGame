@@ -20,6 +20,7 @@ class Control():
     SHOOT_BUTTON = 2
 
 class Game():
+    DEBUG = False
     WINDOW_HEIGHT = 768
     WINDOW_WIDTH = 1024
     RIGHT_BOUNDS = 450
@@ -37,6 +38,8 @@ class Game():
     OVERLAY_LIVES_POS = 100
     OVERLAY_AMMO_POS = 295
     OVERLAY_SCORE_POS = 820
+    OVERLAY_HOMEWORK_POS = 575
+    EXTRA_LIFE_PAPERS = 100
     DART_BOUNCE = 3
     MUSIC_VOLUME = .05
     NERF_PISTOL_SPEED = 12
@@ -46,13 +49,23 @@ class Game():
     NERF_RIFLE_ARC = -3
     NERF_RIFLE_START_AMMO = 6
     NERF_DART_IMAGE = "./assets/art/nerf_dart.png"  
-    
+    NERF_PISTOL_IMAGE = "./assets/art/nerf_pistol.png"
+    NERF_RIFLE_IMAGE = "./assets/art/nerf_rifle.png"
+    PLAYER_START_LIVES = 2
+    PAPER_IMAGE = "./assets/art/paper.png"
+    PAPER_POINTS = 10
+    ENEMY_KILL_SOUND = "./assets/sound/splat.wav"
+    EXTRA_LIFE_SOUND = "./assets/sound/extra_life.wav"
+    PLAYER_HIT_SOUND = "./assets/sound/player_hit.wav"
+
+class Player():
+    PLAYER_JUMP_SOUND = "./assets/sound/jump.wav"
+    PLAYER_SHOOT_SOUND = "./assets/sound/pop.wav"
+    PLAYER_X_SHRINK = -40
+    PLAYER_Y_SHRINK = -10
     ZOEY_SPRITE_SHEET = "./assets/art/zoey_sprite_sheet.png"
     PLAYER_SPRITE_HEIGHT = 80
     PLAYER_SPRITE_WIDTH = 60
-    NERF_PISTOL_IMAGE = "./assets/art/nerf_pistol.png"
-    NERF_RIFLE_IMAGE = "./assets/art/nerf_rifle.png"
-    PLAYER_START_LIVES = 200
 
 class Enemy():
     ZOMBIE_POINT_VALUE = 200
@@ -60,11 +73,15 @@ class Enemy():
     ZOMBIE_WALK_SPEED = .08
     ZOMBIE_SPRITE_WIDTH = 59
     ZOMBIE_SPRITE_HEIGHT = 96
+    ZOMBIE_X_INFLATE = -20
+    ZOMBIE_Y_INFLATE = -45
     ZOMBIE_SPRITE_SHEET = "./assets/art/zombie_sprite_sheet.png"
     SKELETON_POINT_VALUE = 400
     SKELETON_SPRITE_SHEET = "./assets/art/skeleton_sprite_sheet.png"
     SKELETON_SPRITE_WIDTH = 48
     SKELETON_SPRITE_HEIGHT = 96
+    SKELETON_X_INFLATE = -20
+    SKELETON_Y_INFLATE = -45
     SKELETON_ANIMATE_SPEED = 750
     SKELETON_SPRITE_BULLET_WIDTH = 20
     SKELETON_SPRITE_BULLET_HEIGHT = 20
@@ -77,17 +94,23 @@ class Enemy():
     GOLFER_BULLET_SPEED = 12
     GOLFER_BULLET_ARC = -7
     GOLFER_SPRITE_SHEET = "./assets/art/golfer_sprite_sheet.png"
+    GOLFER_SOUND = "./assets/sound/Swing.wav"
     GOLFER_SPRITE_WIDTH = 48
     GOLFER_SPRITE_HEIGHT = 96
+    GOLFER_X_INFLATE = -20
+    GOLFER_Y_INFLATE = -45
     GOLFER_ANIMATE_SPEED = 1000
     GOLFER_BULLET_SPRITE = "./assets/art/golfer_bullet.png"
     GOLFER_SHOOT_RATE = 2000
     GOLF_CART_POINT_VALUE = 300
     GOLF_CART_SPRITE_SHEET = "./assets/art/golf_cart_sprite_sheet.png"
+    GOLF_CART_SOUND = "./assets/sound/cart.wav"
     GOLF_CART_SPRITE_WIDTH = 120
     GOLF_CART_SPRITE_HEIGHT = 96
     GOLF_CART_ANIMATE_SPEED = 1000
     GOLF_CART_MOVE_SPEED = 1.5
+    GOLFCART_X_INFLATE = -15
+    GOLFCART_Y_INFLATE = -40
 
 class ParticleImages(object):
     SMOKE = "./assets/art/particle/smoke.png"
