@@ -23,6 +23,19 @@ class Obstacle(SpriteBase.GameSprite):
         return (self.map_x,  self.map_y)
 
 
+class Paper(SpriteBase.GameSprite):
+
+    def __init__(self, start_coord):
+        super().__init__(start_coord)
+        self.image = pygame.image.load(Game.PAPER_IMAGE).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.move_ip(self.pos.x, self.pos.y)
+        self.shouldDraw = True
+
+    def world_shift(self, xdiff):
+        self.rect.x += xdiff
+
+
 class Projectile(SpriteBase.GameSprite):
 
     def __init__(self, acceleration_x, acceleration_y, start_coord, spriteImage):
@@ -51,6 +64,7 @@ class Projectile(SpriteBase.GameSprite):
 class AnimatedBullet(Projectile):
     def __init__(self, acceleration_x, acceleration_y, start_coord, spriteSheet, sprite_width, sprite_height, sprite_length):
         pygame.sprite.Sprite.__init__(self)
+        self.collision_rect = None
         self.acceleration = vec(acceleration_x, acceleration_y)
         self.sprite_width = sprite_width
         self.sprite_height = sprite_height

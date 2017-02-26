@@ -16,14 +16,13 @@ class PlayerSprite(SpriteBase.GameSprite):
         self.is_dead = False
         self.nerf_dart_image_right = pygame.image.load(Game.NERF_DART_IMAGE).convert()
         self.nerf_dart_image_left = pygame.transform.flip(self.nerf_dart_image_right, True, False)
-        self.sprite_sheet = SpriteBase.Spritesheet(Game.ZOEY_SPRITE_SHEET)
+        self.sprite_sheet = SpriteBase.Spritesheet(Player.ZOEY_SPRITE_SHEET)
         self.load_player_sprites()
         self.image_set = self.stop_image_left
         self.image = self.image_set[0]
         self.rect = self.image.get_rect()
         self.direction = Move.STOP
         self.facing = Move.RIGHT
-        self.rect.inflate_ip(-20, 0)
         self.jump_buffer = None
         self.duck = False
         self.run = False
@@ -32,17 +31,19 @@ class PlayerSprite(SpriteBase.GameSprite):
         self.last_frame = 0
         self.gun = None
         self.rect.move_ip(self.pos)
-        self.jump_sound = pygame.mixer.Sound("./assets/sound/jump.wav")
-        self.shoot_sound = pygame.mixer.Sound("./assets/sound/shoot.wav")
+        self.collision_rect = self.rect.inflate(Player.PLAYER_X_SHRINK, Player.PLAYER_Y_SHRINK)
+        self.jump_sound = pygame.mixer.Sound(Player.PLAYER_JUMP_SOUND)
+        self.shoot_sound = pygame.mixer.Sound(Player.PLAYER_SHOOT_SOUND)
+        self.shoot_sound.set_volume(100)
         self.bullets = SpriteBase.BulletBaseGroup()
 
     def load_player_sprites(self):
-        self.frames_right = [self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 0, 0),
-                                    self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 1, 0),
-                                    self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 2, 0)]
-        self.stop_image_right = [self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 3, 0)]
+        self.frames_right = [self.sprite_sheet.get_image_row_column(Player.PLAYER_SPRITE_WIDTH, Player.PLAYER_SPRITE_HEIGHT, 0, 0),
+                                    self.sprite_sheet.get_image_row_column(Player.PLAYER_SPRITE_WIDTH, Player.PLAYER_SPRITE_HEIGHT, 1, 0),
+                                    self.sprite_sheet.get_image_row_column(Player.PLAYER_SPRITE_WIDTH, Player.PLAYER_SPRITE_HEIGHT, 2, 0)]
+        self.stop_image_right = [self.sprite_sheet.get_image_row_column(Player.PLAYER_SPRITE_WIDTH, Player.PLAYER_SPRITE_HEIGHT, 3, 0)]
         self.stop_image_left = [pygame.transform.flip(self.stop_image_right[0], True, False)]
-        self.image_jump_right = self.sprite_sheet.get_image_row_column(Game.PLAYER_SPRITE_WIDTH, Game.PLAYER_SPRITE_HEIGHT, 4, 0)
+        self.image_jump_right = self.sprite_sheet.get_image_row_column(Player.PLAYER_SPRITE_WIDTH, Player.PLAYER_SPRITE_HEIGHT, 4, 0)
         self.image_jump_left = pygame.transform.flip(self.image_jump_right, True, False)
         self.frames_left = []
         for image in self.frames_right:
@@ -53,6 +54,11 @@ class PlayerSprite(SpriteBase.GameSprite):
 
     def draw(self, display):
         display.blit(self.image, self.rect)
+        
+        if Game.DEBUG:
+            collisiont_rect_image = pygame.Surface((self.collision_rect.width, self.collision_rect.height))
+            collisiont_rect_image.fill((120,230,20))
+            display.blit(collisiont_rect_image, self.collision_rect)
 
     def move(self, direction, stop_movement=False):
         if stop_movement and self.direction == direction:
@@ -147,7 +153,7 @@ class PlayerSprite(SpriteBase.GameSprite):
         y_vel = math.ceil(self.vel.y + .5 * self.acc.y)
       #  print('enemy top: '+str(enemy.rect.top) + ' self bottom: '+str(self.rect.bottom) + ' yvel = '+str(y_vel)
        # +' vel = '+str(self.vel))
-        if self.vel.y - gravity > 0 and enemy.rect.top >= self.rect.bottom - y_vel:
+        if self.vel.y - gravity > 0 and enemy.get_collision_rect().top >= self.collision_rect.bottom - y_vel:
             self.vel.y = Move.PLAYER_POP
             return True
         else:

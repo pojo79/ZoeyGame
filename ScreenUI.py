@@ -24,9 +24,10 @@ class ScreenOverlay(pygame.sprite.Sprite):
             position += 1
             
 
-    def draw(self, screen, lives, ammo, points):
+    def draw(self, screen, lives, ammo, points, homework):
         screen.blit(self.image, self.image.get_rect())
         self.draw_numbers(screen,lives,GameSetting.Game.OVERLAY_LIVES_POS, self.image.get_rect().y, GameSetting.Game.NUMBERS_SPRITE_WIDTH)
         self.draw_numbers(screen,ammo,GameSetting.Game.OVERLAY_AMMO_POS, self.image.get_rect().y, GameSetting.Game.NUMBERS_SPRITE_WIDTH)
+        self.draw_numbers(screen,homework,GameSetting.Game.OVERLAY_HOMEWORK_POS, self.image.get_rect().y, GameSetting.Game.NUMBERS_SPRITE_WIDTH)
         self.draw_numbers(screen,points,GameSetting.Game.OVERLAY_SCORE_POS, self.image.get_rect().y, GameSetting.Game.NUMBERS_SPRITE_WIDTH)
         
