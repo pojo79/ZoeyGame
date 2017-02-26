@@ -45,6 +45,7 @@ class FlintAndZoeyGame(object):
         self.splat = pygame.mixer.Sound(Game.ENEMY_KILL_SOUND)
         self.extra_life_sound = pygame.mixer.Sound(Game.EXTRA_LIFE_SOUND)
         self.player_hit_sound = pygame.mixer.Sound(Game.PLAYER_HIT_SOUND)
+        self.paper_get = pygame.mixer.Sound(Game.PAPER_SOUND)
         self.game_display = game_display
         self.player = PlayerSprite(self.spawn)
         self.points = 0
@@ -185,13 +186,13 @@ class FlintAndZoeyGame(object):
                 self.level.ground.draw(self.game_display)
                 self.allGameObjects.draw(self.game_display)
 
-            # draw items
+            # draw items            
+            self.level.papers.draw(self.game_display)
             bullets.draw(self.game_display)
             self.level.powerups.draw(self.game_display)
             self.level.ammo.draw(self.game_display)
             self.level.enemies.draw(self.game_display)
             self.player.draw(self.game_display)
-            self.level.papers.draw(self.game_display)
             gameOverlay.draw(self.game_display, self.player_lives, self.player.get_ammo(), self.points, self.papers)
             for particleSystem in self.particleSystems:
                 particleSystem.draw_particles(self.game_display)
@@ -237,6 +238,7 @@ class FlintAndZoeyGame(object):
             for paper in papers:
                 self.papers = self.papers+1
                 self.points = self.points+Game.PAPER_POINTS
+                self.paper_get.play()
 
                 if self.papers == Game.EXTRA_LIFE_PAPERS:
                     self.papers = 0

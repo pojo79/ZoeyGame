@@ -57,6 +57,7 @@ class Game():
     ENEMY_KILL_SOUND = "./assets/sound/splat.wav"
     EXTRA_LIFE_SOUND = "./assets/sound/extra_life.wav"
     PLAYER_HIT_SOUND = "./assets/sound/player_hit.wav"
+    PAPER_SOUND = "./assets/sound/paper.wav"
 
 class Player():
     PLAYER_JUMP_SOUND = "./assets/sound/jump.wav"
@@ -76,6 +77,7 @@ class Enemy():
     ZOMBIE_X_INFLATE = -20
     ZOMBIE_Y_INFLATE = -45
     ZOMBIE_SPRITE_SHEET = "./assets/art/zombie_sprite_sheet.png"
+    ZOMBIE_SOUND = "./assets/sound/zombie_sound.wav"
     SKELETON_POINT_VALUE = 400
     SKELETON_SPRITE_SHEET = "./assets/art/skeleton_sprite_sheet.png"
     SKELETON_SPRITE_WIDTH = 48
@@ -90,6 +92,7 @@ class Enemy():
     SKELETON_SHOOT_RATE = 2500
     SKELETON_BULLET_ARC = -4
     SKELETON_BULLET_SPEED = 18
+    SKELETON_SHOOT_SOUND = "./assets/sound/skeleton_shoot.wav"
     GOLFER_POINT_VALUE = 300
     GOLFER_BULLET_SPEED = 12
     GOLFER_BULLET_ARC = -7

@@ -34,6 +34,7 @@ class EnemyBase(SpriteBase.GameSprite):
 class Zombie(EnemyBase):
     points = Enemy.ZOMBIE_POINT_VALUE
     UPDATE_FRAME_ON = Enemy.ZOMBIE_ANIMATE_SPEED
+    PLAY_SOUND_ON = 3500
 
     def __init__(self, x, y, travel=40):
         super().__init__((x, y))
@@ -48,6 +49,8 @@ class Zombie(EnemyBase):
         self.x_max_travel = travel
         self.facing = Move.RIGHT
         self.collision_rect = self.rect.inflate(Enemy.ZOMBIE_X_INFLATE, Enemy.ZOMBIE_Y_INFLATE)
+        self.zombie_sound = pygame.mixer.Sound(Enemy.ZOMBIE_SOUND)
+        self.played_sound_on = 0
 
     def load_images(self):
         self.walking_frames_left = [self.spritesheet.get_image_row_column(Enemy.ZOMBIE_SPRITE_WIDTH, Enemy.ZOMBIE_SPRITE_HEIGHT, 2, 0),
@@ -66,6 +69,9 @@ class Zombie(EnemyBase):
 
     def update(self, friction, gravity, player_pos):
         force = False
+        if pygame.time.get_ticks() - self.played_sound_on > self.PLAY_SOUND_ON:
+            self.played_sound_on = pygame.time.get_ticks()
+            self.zombie_sound.play()
         if math.fabs(self.x_travel) <= self.x_max_travel:
             self.x_travel += self.vel.x
             if self.facing == Move.LEFT:
@@ -191,6 +197,7 @@ class Skeleton(EnemyBase):
         self.last_frame = 0
         self.collision_rect = self.rect.inflate(Enemy.SKELETON_X_INFLATE, Enemy.SKELETON_Y_INFLATE)
         self.facing = "RIGHT"
+        self.skeleton_sound = pygame.mixer.Sound(Enemy.SKELETON_SHOOT_SOUND)
 
     def load_frames(self):
         self.frames_right = [self.sprite_sheet.get_image_row_column(Enemy.SKELETON_SPRITE_WIDTH, Enemy.SKELETON_SPRITE_HEIGHT, 0, 0),
@@ -206,6 +213,7 @@ class Skeleton(EnemyBase):
         if ticks - self.bullet_last_shot > Enemy.SKELETON_SHOOT_RATE:
             throw = True
             self.bullet_last_shot = ticks
+            self.skeleton_sound.play()
             if self.pos.x < player_pos.x:
                 self.bullets.add(AnimatedBullet(Enemy.SKELETON_BULLET_SPEED, Enemy.SKELETON_BULLET_ARC, self.rect.topleft, self.bullet_image,
                 Enemy.SKELETON_SPRITE_BULLET_WIDTH, Enemy.SKELETON_SPRITE_BULLET_HEIGHT, Enemy.SKELETON_SPRITE_BULLET_LENGTH))
