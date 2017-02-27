@@ -277,9 +277,9 @@
     <property name="travel" value="50"/>
    </properties>
   </object>
-  <object id="166" name="zombie" x="3344" y="160" width="59" height="96">
+  <object id="166" name="zombie" x="3360" y="160" width="59" height="96">
    <properties>
-    <property name="travel" value="20"/>
+    <property name="travel" value="70"/>
    </properties>
   </object>
   <object id="167" name="zombie" x="4336" y="576" width="59" height="96">
